@@ -16,3 +16,7 @@ mit6.824学习笔记及源码
 
 #### MapReduce  
 * 大规模数据集（大于1TB）的并行运算
+
+### Lab1: MapReduce
+* 坑1: RPC 消息结构体有两个 string 对象时，只有一个 string 能正常传输
+* 坑2: linux sort 命令排序规则基于 locale, `export LC_ALL=C` 可以解决
