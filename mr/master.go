@@ -66,24 +66,27 @@ func (m *Master) GetTask(taskReq *TaskRequest, taskResp *TaskResponse) error {
 	tasks := []*AssignTask{}
 	// 获取 map task
 	m.mapTaskLock.Lock()
-	for filename, num := range m.mapTask {
-		if num > 0 {
-			// 存在待分发的任务
-			task := &AssignTask{
-				FileName: filename,
-				TaskId:   num,
+	if !m.isMapDone {
+		// map 阶段还没完成
+		for filename, num := range m.mapTask {
+			if num > 0 {
+				// 存在待分发的任务
+				task := &AssignTask{
+					FileName: filename,
+					TaskId:   num,
+				}
+				tasks = append(tasks, task)
+				break
 			}
-			tasks = append(tasks, task)
-			break
 		}
-	}
-	if len(tasks) > 0 {
-		taskResp.TaskType = MAP_TASK // map 任务
-		for _, task := range tasks {
-			m.mapTask[task.FileName] = -task.TaskId // 任务已分发
-			// fmt.Printf("task: %d has assign.\n", task.TaskId)
+		if len(tasks) > 0 {
+			taskResp.TaskType = MAP_TASK // map 任务
+			for _, task := range tasks {
+				m.mapTask[task.FileName] = -task.TaskId // 任务已分发
+				// fmt.Printf("task: %d has assign.\n", task.TaskId)
+			}
+			go m.recoverRequest(tasks, MAP_TASK) // 任务失败时重新分发
 		}
-		go m.recoverRequest(tasks, MAP_TASK) // 任务失败时重新分发
 	}
 	m.mapTaskLock.Unlock()
 
@@ -147,6 +150,12 @@ func (m *Master) TaskFinished(finishReq *FinishedRequest, finishResp *FinishedRe
 
 		// 删除已完成的 map 任务
 		m.mapTaskLock.Lock()
+		if m.isMapDone {
+			// 如果 map 阶段已经结束, 且有某些因为延迟的 worker 再次提交了 map 任务完成请求, 则可以忽略
+			// 如果不忽略的话可能会导致 reduce 任务的记录变量错乱
+			m.mapTaskLock.Unlock()
+			break
+		}
 		for _, task := range finishReq.Tasks {
 			delete(m.mapTask, task.FileName)
 			// fmt.Printf("task: %v \n", *task)
@@ -188,6 +197,12 @@ func (m *Master) TaskFinished(finishReq *FinishedRequest, finishResp *FinishedRe
 	case MAP_TASK_FAIL:
 		// map 任务失败
 		m.mapTaskLock.Lock()
+		if m.isMapDone {
+			// 如果 map 阶段已经结束, 且有某些因为延迟的 worker 再次提交了 map 任务失败请求, 则可以忽略
+			// 如果不忽略的话可能会导致 map 任务的记录变量错乱
+			m.mapTaskLock.Unlock()
+			break
+		}
 		for _, task := range finishReq.Tasks {
 			// fmt.Printf("map task %s is fail\n", task.FileName)
 			m.mapTask[task.FileName] = task.TaskId // 待分发
@@ -221,7 +236,7 @@ func (m *Master) recoverRequest(tasks []*AssignTask, taskType int) {
 		m.mapTaskLock.Lock()
 		ok := false
 		for _, task := range tasks {
-			_, ok := m.mapTask[task.FileName]
+			_, ok = m.mapTask[task.FileName]
 			if ok {
 				break
 			}

@@ -171,7 +171,7 @@ func doMap(mapf func(string, string) []KeyValue, tasks []*AssignTask, nReduce in
 		// 写到不同的 mr-X-Y 文件
 		for Y, kvs := range regionMap {
 			// 中间文件命名规则: mr-X-Y (Y从 1 开始)
-			// TODO: 以临时文件的形式写入, 再重命名, 防止崩溃时文件对其他工作节点可见
+			// 以临时文件的形式写入, 再重命名, 防止崩溃时文件对其他工作节点可见
 			oname := NumberToStr(task.TaskId, Y)
 
 			// 序列化为 json
@@ -181,17 +181,20 @@ func doMap(mapf func(string, string) []KeyValue, tasks []*AssignTask, nReduce in
 				return nil, err
 			}
 			// 创建文件, 并写入文件
-			ofile, err := os.Create(oname)
+			// ofile, err := os.Create(oname)
+			tmpFile, err := os.CreateTemp(".", oname)
 			if err != nil {
 				fmt.Println("map create file fail")
 				return nil, err
 			}
-			_, err = ofile.Write(data)
+			_, err = tmpFile.Write(data)
 			if err != nil {
 				fmt.Println("map write file fail")
 				return nil, err
 			}
-			ofile.Close()
+			// 重命名为非临时文件, 原子的
+			os.Rename(tmpFile.Name(), oname)
+			tmpFile.Close()
 			// 添加 BucketNum
 			finishTask.BucketNums = append(finishTask.BucketNums, Y)
 		}
@@ -243,10 +246,11 @@ func doReduce(reducef func(string, []string) string, tasks []*AssignTask) ([]*Fi
 	sort.Sort(ByKey(keyVals))
 
 	// reduce 输出文件名 mr-out-Y (Y从 0 开始)
-	// TODO: 以临时文件的形式写入, 再重命名, 防止崩溃时文件对其他工作节点可见
+	// 以临时文件的形式写入, 再重命名, 防止崩溃时文件对其他工作节点可见
 	oname := "mr-out-" + strconv.Itoa(tasks[0].TaskId-1)
 	// 创建文件
-	ofile, err := os.Create(oname)
+	// ofile, err := os.Create(oname)
+	tmpFile, err := os.CreateTemp(".", oname)
 	if err != nil {
 		fmt.Println("reduce create file fail")
 		return nil, err
@@ -264,11 +268,14 @@ func doReduce(reducef func(string, []string) string, tasks []*AssignTask) ([]*Fi
 		}
 		output := reducef(keyVals[i].Key, values)
 		// 按行写到文件
-		fmt.Fprintf(ofile, "%v %v\n", keyVals[i].Key, output)
+		fmt.Fprintf(tmpFile, "%v %v\n", keyVals[i].Key, output)
 
 		i = j
 	}
-	ofile.Close()
+	// 重命名为非临时文件
+	os.Rename(tmpFile.Name(), oname)
+
+	tmpFile.Close()
 
 	return finishTasks, nil
 }
