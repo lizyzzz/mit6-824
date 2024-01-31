@@ -41,6 +41,6 @@ if ok {
 
 ### Lab2A: Leader Election And HeartBeat
 * 状态转化逻辑
-![image-状态转化](./images/Lab2A-1.png)
+![image-状态转化](./images/Lab2A-1.jpg)
 * 实现逻辑及接口
-![image-实现逻辑](./images/Lab2A-2.png)
+![image-实现逻辑](./images/Lab2A-2.jpg)
