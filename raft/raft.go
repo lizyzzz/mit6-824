@@ -514,7 +514,7 @@ func (rf *Raft) StartElection() {
 }
 
 // 超时提出选举的后台线程函数
-// TODO: leader 应该没有这个后台线程?(切换为 leader/candicate 时退出该线程)
+// leader 应该没有这个后台线程?(切换为 leader/candicate 时退出该线程)
 func (rf *Raft) TimeOutToElection() {
 	// 定时器
 	ticker := time.NewTicker(time.Duration(rf.timeOutMS) * time.Millisecond)
