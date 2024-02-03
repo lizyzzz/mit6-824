@@ -45,15 +45,17 @@ type ApplyMsg struct {
 
 // 日志条目
 type LogEntry struct {
-	// 暂时为空
-	TermNumber int // 日志发生的任期
-	LogIndex   int // 日志的 index(从 1 开始)
+	LogTerm       int         // 日志发生的任期
+	LogIndex      int         // 日志的 index(从 1 开始)
+	Command       interface{} // command 命令
+	CommandIndex  int         // 外部命令的 index
+	IsInternalLog bool        // 是否是内部log(如果是内部log, 提交后不会返回)
 }
 
 // leader 结构体
 type Leader struct {
-	nextIndexs  []int32 // leader 维护每个服务器的下一个日志 index
-	matchIndexs []int32 // leader 维护每个服务器的已复制的最高 index
+	nextIndexs  []int // leader 维护每个服务器的下一个日志 index
+	matchIndexs []int // leader 维护每个服务器的已复制的最高 index
 }
 
 // 服务器角色类型
@@ -74,12 +76,17 @@ type Raft struct {
 	// Your data here (2A, 2B, 2C).
 	// Look at the paper's Figure 2 for a description of what
 	// state a Raft server must maintain.
+
+	// 持久化状态
 	currentTerm int         // 当前任期
 	votedFor    int         // 投票的目标
 	logs        []*LogEntry // 日志条目
 
-	commitIndex int // 已知的已提交的日志条目的 最大索引
-	lastApplied int // 应用到状态机的日志条目的 最大索引
+	// 易失状态
+	commitIndex int           // 已知的已提交的日志条目的 最大索引
+	lastApplied int           // 应用到状态机的日志条目的 最大索引
+	applyChan   chan ApplyMsg // 通知应用层把已提交的命令应用到状态机
+	// replicationCount map[int]int // index -> count: 索引为 index 的日志被接收的副本个数(用来判断是否可以提交了)
 
 	role int // 服务器角色
 
@@ -127,9 +134,29 @@ func (rf *Raft) becomeFollower(newTerm int) {
 func (rf *Raft) becomeLeader() {
 	rf.role = LEADER
 	rf.leaderPtr = &Leader{
-		nextIndexs:  make([]int32, 0),
-		matchIndexs: make([]int32, 0),
+		nextIndexs:  make([]int, len(rf.peers)),
+		matchIndexs: make([]int, len(rf.peers)),
 	}
+
+	// TODO: 初始化 nextIndexs matchIndexs
+	for i := 0; i < len(rf.peers); i++ {
+		rf.leaderPtr.nextIndexs[i] = len(rf.logs)
+		rf.leaderPtr.matchIndexs[i] = 0
+	}
+	// 第一次 heartbeat , 发送一个 no-op 的 log entry 以确定 leader 新上任时有哪些 entry 已经被提交
+
+	// 追加一个 no-op 到 logs 中
+	index := len(rf.logs)
+	noOpLog := &LogEntry{
+		LogTerm:       rf.currentTerm,
+		LogIndex:      index,
+		Command:       nil,                                  // 空 command
+		CommandIndex:  rf.logs[len(rf.logs)-1].CommandIndex, // CommandIndex 不变
+		IsInternalLog: true,                                 // 内部 log
+	}
+	rf.logs = append(rf.logs, noOpLog)
+	// rf.replicationCount[index] = 1 // 计数重置为 1
+
 	// 开启 heartbeat
 	for i := range rf.peers {
 		if i == rf.me {
@@ -180,8 +207,8 @@ type RequestVoteArgs struct {
 	// Your data here (2A, 2B).
 	CandicateTerm int // 候选人的当前任期
 	CandicateId   int // 候选人的 id
-	LastLogIndex  int // 候选人最后一条日志条目的 index
-	LastLogTerm   int // 候选人最后一条日志条目的 term
+	LastLogIndex  int // 候选人最后一条日志条目的 index(用于比较日志的新旧)
+	LastLogTerm   int // 候选人最后一条日志条目的 term(用于比较日志的新旧)
 }
 
 // example RequestVote RPC reply structure.
@@ -205,12 +232,12 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	}
 	curRole := rf.role
 	curTerm := rf.currentTerm
-	lastLogIdx := 0
-	lastLogTerm := 0
-	if len(rf.logs) > 0 {
-		lastLogIdx = rf.logs[len(rf.logs)-1].LogIndex
-		lastLogTerm = rf.logs[len(rf.logs)-1].TermNumber
-	}
+	lastLogIdx := rf.logs[len(rf.logs)-1].LogIndex
+	lastLogTerm := rf.logs[len(rf.logs)-1].LogTerm
+	// if len(rf.logs) > 0 {
+	// 	lastLogIdx = rf.logs[len(rf.logs)-1].LogIndex
+	// 	lastLogTerm = rf.logs[len(rf.logs)-1].LogTerm
+	// }
 	rf.mu.Unlock()
 
 	reply.VoteGranted = false
@@ -323,6 +350,7 @@ type AppendEntriesReply struct {
 	Success      bool // true 如果 follower 包含相匹配的 PrevLogIndex 和 PrevLogTerm
 }
 
+// 心跳, 日志复制
 func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
 
 	rf.mu.Lock()
@@ -354,9 +382,55 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		// 不能发送 heartbeatCh 因为 leader 阶段没有接收 heartbeatCh
 	}
 
-	// fmt.Printf("follower %d recv heartbeat from leader %d\n", rf.me, args.LeaderId)
+	// fmt.Printf("follower %d recv heartbeat from leader %d, entries: %v, lenOfEntries: %d, leadercommitIndex: %d\n", rf.me, args.LeaderId, args.Entries, len(args.Entries), args.LeaderCommit)
 
 	// TODO: 日志复制
+	// 检查日志是否冲突
+	if args.Entries != nil {
+		// fmt.Printf("not nil\n")
+		// follower 的 logs 只在该线程下改变, 不用持有锁
+		if len(rf.logs)-1 >= args.PrevLogIndex {
+			// 该 preLogindex 存在, 比较 term
+			if rf.logs[args.PrevLogIndex].LogTerm == args.PrevLogTerm {
+				// term 也相同, 日志不冲突
+				// 更新 logs
+				rf.logs = rf.logs[:args.PrevLogIndex+1]
+				rf.logs = append(rf.logs, args.Entries...)
+				reply.Success = true
+				// fmt.Printf("follower %d update log, lenOfLog: %d\n", rf.me, len(rf.logs))
+			} else {
+				// term 不相同, 删除该entry后的所有日志(保留args.PrevLogIndex以前的日志)
+				rf.logs = rf.logs[:args.PrevLogIndex]
+				reply.Success = false
+				return // 不进行更新 commitIndex, 因为日志还没有同步, 会把错误的操作更新到状态机
+			}
+		} else {
+			// 该 preLogindex 不存在, 不做处理, 返回 false
+			reply.Success = false
+			return // 不进行更新 commitIndex, 因为日志还没有同步, 会把错误的操作更新到状态机
+		}
+	}
+
+	// 更新 commitIndex, 并把提交应用到状态机 (日志已同步或者正常心跳(说明日志已同步)都可以进行更新)
+	if args.LeaderCommit > rf.commitIndex {
+		// fmt.Printf("follower %d args.LeaderCommit:%d > rf.commitIndex:%d, lenOfLog:%d\n", rf.me, args.LeaderCommit, rf.commitIndex, len(rf.logs))
+		i := rf.commitIndex + 1
+		for ; i <= args.LeaderCommit && i < len(rf.logs); i++ {
+			// fmt.Printf("follower %d log[%d].IsInternalLog: %v\n", rf.me, i, rf.logs[i].IsInternalLog)
+			if !rf.logs[i].IsInternalLog {
+				// 非内部 log
+				applyMsg := ApplyMsg{
+					CommandValid: true,
+					Command:      rf.logs[i].Command,
+					CommandIndex: rf.logs[i].CommandIndex,
+				}
+				rf.applyChan <- applyMsg
+				// fmt.Printf("follower %d apply command: %v, commandIndex: %d\n", rf.me, applyMsg.Command, applyMsg.CommandIndex)
+			}
+			rf.commitIndex = i
+			rf.lastApplied = i
+		}
+	}
 
 	return
 }
@@ -401,12 +475,12 @@ func (rf *Raft) StartElection() {
 		rf.role = CANDICATE
 		rf.votedFor = rf.me // 投票给自己
 		term := rf.currentTerm
-		lastLogTerm := 0
-		lastLogIdx := 0
-		if len(rf.logs) > 0 {
-			lastLogTerm = rf.logs[len(rf.logs)-1].TermNumber
-			lastLogIdx = rf.logs[len(rf.logs)-1].LogIndex
-		}
+		lastLogTerm := rf.logs[len(rf.logs)-1].LogTerm
+		lastLogIdx := rf.logs[len(rf.logs)-1].LogIndex
+		// if len(rf.logs) > 0 {
+		// 	lastLogTerm = rf.logs[len(rf.logs)-1].LogTerm
+		// 	lastLogIdx = rf.logs[len(rf.logs)-1].LogIndex
+		// }
 		rf.mu.Unlock()
 
 		// 选举阶段超时 定时器
@@ -549,6 +623,7 @@ func (rf *Raft) TimeOutToElection() {
 }
 
 // heatBeat 线程
+// TODO: 修改检查索引
 func (rf *Raft) HeartBeatToServer(peerIndex int) {
 	for {
 		if rf.killed() {
@@ -558,26 +633,35 @@ func (rf *Raft) HeartBeatToServer(peerIndex int) {
 
 		rf.mu.Lock()
 		role := rf.role
-		rf.mu.Unlock()
-
 		if role != LEADER {
 			// 收到了 term 更大的心跳或 requestVote, 已切换为follower
+			rf.mu.Unlock()
 			return
 		}
-
 		args := &AppendEntriesArgs{
 			LeaderTerm: rf.currentTerm,
 			LeaderId:   rf.me,
 			// 以下为 log entries 的参数
-			// PrevLogIndex: ,
-			// PrevLogTerm: ,
-			// Entries: make([]*LogEntry, 1),
-			// LeaderCommit: ,
+			PrevLogIndex: -1,
+			PrevLogTerm:  -1,
+			Entries:      nil,
+			LeaderCommit: rf.commitIndex, // 如果是第一次 heartbeat, commitIndex == 0
 		}
+		if len(rf.logs)-1 >= rf.leaderPtr.nextIndexs[peerIndex] {
+			// 有需要提交的日志
+			// fmt.Printf("peer:%d, len(logs):%d, index:%d\n", peerIndex, len(rf.logs), rf.leaderPtr.nextIndexs[peerIndex])
+			args.PrevLogIndex = rf.logs[rf.leaderPtr.nextIndexs[peerIndex]-1].LogIndex
+			args.PrevLogTerm = rf.logs[rf.leaderPtr.nextIndexs[peerIndex]-1].LogTerm
+			args.Entries = rf.logs[rf.leaderPtr.nextIndexs[peerIndex]:] // 剩下的全部日志
+		}
+		rf.mu.Unlock()
+
 		reply := &AppendEntriesReply{}
+		// 如果有需要复制的 log entry, 则以更短的时间间隔发送 appendentry
+
 		// fmt.Printf("leader %d send heartbeat to follower %d\n", rf.me, peerIndex)
 		// ok := rf.sendAppendEntries(peerIndex, args, reply)
-		timeOut, ok := rf.sendAppendEntriesWithTimeOut(peerIndex, args, reply, 100*time.Millisecond)
+		timeOut, ok := rf.sendAppendEntriesWithTimeOut(peerIndex, args, reply, 50*time.Millisecond)
 		if timeOut {
 			// 任务超时
 			// fmt.Printf("leader %d send heartbeat to follower %d timeout\n", rf.me, peerIndex)
@@ -585,7 +669,55 @@ func (rf *Raft) HeartBeatToServer(peerIndex int) {
 		} else {
 			// fmt.Printf("leader %d heartbeat recv ok from follower %d, ok: %v\n", rf.me, peerIndex, ok)
 			if ok {
-				if !reply.Success {
+				if reply.Success {
+					if args.Entries != nil {
+						// follower 已复制了日志
+						// 更新 nextIndex 和 matIndex (只有在当前线程改变不需要持有锁)
+						rf.mu.Lock() // Lock() 防止 leaderptr 被置空
+						if rf.role != LEADER {
+							rf.mu.Unlock()
+							return // leader 已被弃用
+						}
+						rf.leaderPtr.nextIndexs[peerIndex] = args.Entries[len(args.Entries)-1].LogIndex + 1
+						rf.leaderPtr.matchIndexs[peerIndex] = args.Entries[len(args.Entries)-1].LogIndex
+						// fmt.Printf("get success from %d, replication logIndex: %d, commitIndex: %d\n", peerIndex, args.Entries[len(args.Entries)-1].LogIndex, rf.commitIndex)
+						// 尝试更新 commitIndex, 并应用命令到状态机
+						if args.Entries[len(args.Entries)-1].LogIndex > rf.commitIndex {
+							// 注意只能提交本任期内的log
+							for i := args.Entries[len(args.Entries)-1].LogIndex; i > rf.commitIndex && rf.logs[i].LogTerm == rf.currentTerm; i-- {
+								cnt := 2 // leader + 当前回复的 follower
+								for j := 0; j < len(rf.peers); j++ {
+									if j == peerIndex || j == rf.me {
+										continue
+									}
+									if rf.leaderPtr.matchIndexs[j] >= i {
+										cnt++
+									}
+								}
+								if cnt >= (len(rf.peers)+1)/2 {
+									// 大多数都已复制了这个 log, 更新 commitIndex
+									// 往 applyCh 发送,更新 lastApplied
+									for k := rf.commitIndex + 1; k <= i; k++ {
+										if !rf.logs[k].IsInternalLog {
+											// 非内部log需要应用到状态机
+											applyMsg := ApplyMsg{
+												CommandValid: true,
+												Command:      rf.logs[k].Command,
+												CommandIndex: rf.logs[k].CommandIndex,
+											}
+											rf.applyChan <- applyMsg
+											// fmt.Printf("leader %d apply command: %v, commandIndex: %d\n", rf.me, applyMsg.Command, applyMsg.CommandIndex)
+										}
+									}
+									rf.commitIndex = i
+									rf.lastApplied = i
+									break
+								}
+							}
+						}
+						rf.mu.Unlock()
+					}
+				} else {
 					if args.LeaderTerm < reply.FollowerTerm {
 						// leaderTerm < replyterm
 						// 转换为 follower
@@ -595,7 +727,16 @@ func (rf *Raft) HeartBeatToServer(peerIndex int) {
 						// fmt.Printf("leader %d find high term, become follower\n", rf.me)
 						break // 跳出循环不再发送 heartbeat
 					} else {
-						// TODO: PrevLogIndex-PrevLogTerm pair 不完全相同
+						// 日志冲突导致的失败, 递减 nextIndex 后重试
+						rf.mu.Lock()
+						if rf.role != LEADER {
+							rf.mu.Unlock()
+							return // leader 已被弃用
+						}
+						rf.leaderPtr.nextIndexs[peerIndex]--
+						rf.mu.Unlock()
+						time.Sleep(10 * time.Millisecond) // 10ms 后重试
+						continue
 					}
 				}
 			}
@@ -618,12 +759,41 @@ func (rf *Raft) HeartBeatToServer(peerIndex int) {
 // if it's ever committed. the second return value is the current
 // term. the third return value is true if this server believes it is
 // the leader.
+
+// 如果当前不是 leader 直接返回 false
+// 如果当前是leader, 返回当前 index, term, true, 并往 把 comand 加到log中, 等待开启一致性协议
+// 如果 raft 被终止, 应该优雅返回
 func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	index := -1
 	term := -1
 	isLeader := true
 
 	// Your code here (2B).
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+	if rf.killed() {
+		// 如果 raft 被终止, 应该优雅返回
+		return index, term, isLeader
+	}
+	isLeader = (rf.role == LEADER)
+	if !isLeader {
+		// 不是 Leader 直接返回 false
+		return index, term, isLeader
+	}
+	index = rf.logs[len(rf.logs)-1].CommandIndex + 1 // commandIndex + 1
+	logIndex := len(rf.logs)
+	term = rf.currentTerm
+	newLog := &LogEntry{
+		LogTerm:       term,
+		LogIndex:      logIndex,
+		Command:       command,
+		CommandIndex:  index,
+		IsInternalLog: false, // 非内部 log
+	}
+	// 追加到 logs 中
+	rf.logs = append(rf.logs, newLog)
+	// fmt.Printf("start append command: %v at index: %d, commandIndex: %d\n", command, logIndex, index)
+	// rf.replicationCount[index] = 1
 
 	return index, term, isLeader
 }
@@ -668,10 +838,19 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 	// Your initialization code here (2A, 2B, 2C).
 	// fmt.Printf("%d init ...\n", rf.me)
-
+	rf.applyChan = applyCh
 	rf.currentTerm = 0
 	rf.votedFor = -1 // -1 表示没有投票
 	rf.logs = make([]*LogEntry, 0)
+	// 哨兵节点
+	dummyLog := &LogEntry{
+		LogTerm:       0,
+		LogIndex:      0,
+		Command:       nil,
+		CommandIndex:  0,
+		IsInternalLog: true,
+	}
+	rf.logs = append(rf.logs, dummyLog)
 
 	rf.commitIndex = 0
 	rf.lastApplied = 0
