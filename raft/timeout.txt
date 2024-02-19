@@ -1,0 +1,2630 @@
+2024/02/19 21:31:12 0 initialize
+2024/02/19 21:31:12 1 initialize
+2024/02/19 21:31:12 2 initialize
+2024/02/19 21:31:12 3 initialize
+2024/02/19 21:31:12 4 initialize
+Test (2C): Figure 8 (unreliable) ...
+2024/02/19 21:31:12 4(role: 1) vote to 0
+2024/02/19 21:31:12 1(role: 1) vote to 0
+2024/02/19 21:31:12 3(role: 1) vote to 0
+2024/02/19 21:31:12 0 win election
+2024/02/19 21:31:12 2(role: 1) vote to 0
+2024/02/19 21:31:12 follower 3 update log, args.PrevLogIndex: 0, lenOfLog: 2
+2024/02/19 21:31:12 1(role: 1) vote to 0
+2024/02/19 21:31:12 follower 4 update log, args.PrevLogIndex: 0, lenOfLog: 2
+2024/02/19 21:31:12 follower 1 update log, args.PrevLogIndex: 0, lenOfLog: 2
+2024/02/19 21:31:12 follower 2 update log, args.PrevLogIndex: 0, lenOfLog: 2
+2024/02/19 21:31:12 follower 4 update log, args.PrevLogIndex: 1, lenOfLog: 3
+2024/02/19 21:31:12 follower 4 args.LeaderCommit:1 > rf.commitIndex:0, lenOfLog:3
+2024/02/19 21:31:12 follower 1 update log, args.PrevLogIndex: 1, lenOfLog: 3
+2024/02/19 21:31:12 follower 1 args.LeaderCommit:1 > rf.commitIndex:0, lenOfLog:3
+2024/02/19 21:31:12 leader 0 apply command: 8481, commandIndex: 1, term: 1
+2024/02/19 21:31:12 follower 3 update log, args.PrevLogIndex: 1, lenOfLog: 3
+2024/02/19 21:31:12 follower 3 args.LeaderCommit:1 > rf.commitIndex:0, lenOfLog:3
+2024/02/19 21:31:12 0 disconnect
+2024/02/19 21:31:12 follower 2 update log, args.PrevLogIndex: 1, lenOfLog: 3
+2024/02/19 21:31:12 follower 2 args.LeaderCommit:1 > rf.commitIndex:0, lenOfLog:3
+2024/02/19 21:31:12 2(role: 1) vote to 1
+2024/02/19 21:31:12 3(role: 1) vote to 1
+2024/02/19 21:31:12 1 win election
+2024/02/19 21:31:12 4(role: 1) vote to 1
+2024/02/19 21:31:12 follower 3 update log, args.PrevLogIndex: 2, lenOfLog: 4
+2024/02/19 21:31:12 follower 4 update log, args.PrevLogIndex: 2, lenOfLog: 4
+2024/02/19 21:31:12 follower 2 update log, args.PrevLogIndex: 2, lenOfLog: 4
+2024/02/19 21:31:12 leader 1 apply command: 8481, commandIndex: 1, term: 2
+2024/02/19 21:31:12 1 disconnect
+2024/02/19 21:31:13 3(role: 1) vote to 2
+2024/02/19 21:31:13 3(role: 1) vote to 2
+2024/02/19 21:31:13 3(role: 1) vote to 2
+2024/02/19 21:31:14 3(role: 1) vote to 2
+2024/02/19 21:31:14 3(role: 1) vote to 4
+2024/02/19 21:31:14 4(role: 1) vote to 3
+2024/02/19 21:31:14 3(role: 1) vote to 4
+2024/02/19 21:31:14 3 loss election because of other become leader
+2024/02/19 21:31:14 3 reject vote to 2 because of small term
+2024/02/19 21:31:14 2 loss election because of other has high term, become follower
+2024/02/19 21:31:14 4 reject vote to 2 because of small term
+2024/02/19 21:31:14 2 reject vote to 3 because of small term
+2024/02/19 21:31:14 2(role: 1) vote to 4
+2024/02/19 21:31:14 4 win election
+2024/02/19 21:31:14 follower 2 update log, args.PrevLogIndex: 3, lenOfLog: 5
+2024/02/19 21:31:14 follower 3 update log, args.PrevLogIndex: 3, lenOfLog: 5
+2024/02/19 21:31:14 leader 4 apply command: 8481, commandIndex: 1, term: 8
+2024/02/19 21:31:15 follower 3 args.LeaderCommit:4 > rf.commitIndex:1, lenOfLog:5
+2024/02/19 21:31:15 follower 3 apply command: 8481, commandIndex: 1, term: 1
+2024/02/19 21:31:15 follower 2 args.LeaderCommit:4 > rf.commitIndex:1, lenOfLog:5
+2024/02/19 21:31:15 follower 2 apply command: 8481, commandIndex: 1, term: 1
+2024/02/19 21:31:15 4 disconnect
+2024/02/19 21:31:15 0 connect
+2024/02/19 21:31:15 0 disconnect
+2024/02/19 21:31:15 0 connect
+2024/02/19 21:31:15 0 disconnect
+2024/02/19 21:31:15 1 connect
+2024/02/19 21:31:15 1 disconnect
+2024/02/19 21:31:15 1 connect
+2024/02/19 21:31:15 1 disconnect
+2024/02/19 21:31:15 0 connect
+2024/02/19 21:31:15 3(role: 1) vote to 2
+2024/02/19 21:31:15 0(role: 1) vote to 2
+2024/02/19 21:31:15 2 win election
+2024/02/19 21:31:15 follower 3 update log, args.PrevLogIndex: 4, lenOfLog: 6
+2024/02/19 21:31:15 follower 0 update log, args.PrevLogIndex: 2, lenOfLog: 6
+2024/02/19 21:31:15 follower 0 args.LeaderCommit:4 > rf.commitIndex:2, lenOfLog:6
+2024/02/19 21:31:15 2 disconnect
+2024/02/19 21:31:15 4 connect
+2024/02/19 21:31:15 4 disconnect
+2024/02/19 21:31:15 4 connect
+2024/02/19 21:31:15 4 disconnect
+2024/02/19 21:31:15 4 connect
+2024/02/19 21:31:15 4 disconnect
+2024/02/19 21:31:15 4 connect
+2024/02/19 21:31:15 4 disconnect
+2024/02/19 21:31:15 1 connect
+2024/02/19 21:31:15 1 disconnect
+2024/02/19 21:31:15 4 connect
+2024/02/19 21:31:15 3 reject vote to 4 because of small log
+2024/02/19 21:31:15 0 reject vote to 4 because of small log
+2024/02/19 21:31:15 3 reject vote to 4 because of small log
+2024/02/19 21:31:15 4(role: 1) vote to 3
+2024/02/19 21:31:15 4 loss election because of other become leader
+2024/02/19 21:31:16 0(role: 1) vote to 3
+2024/02/19 21:31:16 4(role: 1) vote to 0
+2024/02/19 21:31:16 4 loss election because of other become leader
+2024/02/19 21:31:16 4 reject vote to 3 because of small term
+2024/02/19 21:31:16 3(role: 1) vote to 0
+2024/02/19 21:31:16 3 loss election because of other become leader
+2024/02/19 21:31:16 0 win election
+2024/02/19 21:31:16 0 reject vote to 4 because of small term
+2024/02/19 21:31:16 4 reject vote to 3 because of small term
+2024/02/19 21:31:16 3 reject vote to 4 because of small term
+2024/02/19 21:31:16 follower 3 update log, args.PrevLogIndex: 5, lenOfLog: 7
+2024/02/19 21:31:16 follower 4 update log, args.PrevLogIndex: 4, lenOfLog: 7
+2024/02/19 21:31:16 follower 3 update log, args.PrevLogIndex: 5, lenOfLog: 7
+2024/02/19 21:31:16 0 disconnect
+2024/02/19 21:31:16 0 connect
+2024/02/19 21:31:16 0 disconnect
+2024/02/19 21:31:16 2 connect
+2024/02/19 21:31:16 2 disconnect
+2024/02/19 21:31:16 1 connect
+2024/02/19 21:31:16 1 disconnect
+2024/02/19 21:31:16 2 connect
+2024/02/19 21:31:16 3 reject vote to 2 because of small log
+2024/02/19 21:31:16 4 reject vote to 2 because of small log
+2024/02/19 21:31:16 4 reject vote to 2 because of small log
+2024/02/19 21:31:17 2 loss election because of other become leader
+2024/02/19 21:31:17 2(role: 1) vote to 3
+2024/02/19 21:31:17 4(role: 1) vote to 3
+2024/02/19 21:31:17 3 win election
+2024/02/19 21:31:17 follower 4 update log, args.PrevLogIndex: 6, lenOfLog: 8
+2024/02/19 21:31:17 follower 2 update log, args.PrevLogIndex: 5, lenOfLog: 8
+2024/02/19 21:31:17 3 disconnect
+2024/02/19 21:31:17 1 connect
+2024/02/19 21:31:17 1 disconnect
+2024/02/19 21:31:17 3 connect
+2024/02/19 21:31:17 3 disconnect
+2024/02/19 21:31:17 1 connect
+2024/02/19 21:31:17 4 reject vote to 1 because of small log
+2024/02/19 21:31:17 2 reject vote to 1 because of small log
+2024/02/19 21:31:17 2(role: 1) vote to 4
+2024/02/19 21:31:17 1 loss election because of other become leader
+2024/02/19 21:31:17 1(role: 1) vote to 4
+2024/02/19 21:31:17 2(role: 1) vote to 4
+2024/02/19 21:31:17 1(role: 1) vote to 4
+2024/02/19 21:31:17 2(role: 1) vote to 4
+2024/02/19 21:31:17 2(role: 1) vote to 4
+2024/02/19 21:31:17 2(role: 1) vote to 4
+2024/02/19 21:31:17 4 win election
+2024/02/19 21:31:17 4 disconnect
+2024/02/19 21:31:17 4 connect
+2024/02/19 21:31:17 4 disconnect
+2024/02/19 21:31:17 3 connect
+2024/02/19 21:31:17 3 disconnect
+2024/02/19 21:31:17 0 connect
+2024/02/19 21:31:17 2 reject vote to 0 because of small term
+2024/02/19 21:31:17 1 reject vote to 0 because of small term
+2024/02/19 21:31:17 2 reject vote to 0 because of small term
+2024/02/19 21:31:17 1 reject vote to 0 because of small term
+2024/02/19 21:31:17 1(role: 1) vote to 0
+2024/02/19 21:31:18 2 reject vote to 0 because of small log
+2024/02/19 21:31:18 2 reject vote to 0 because of small log
+2024/02/19 21:31:18 1(role: 1) vote to 0
+2024/02/19 21:31:18 1(role: 1) vote to 0
+2024/02/19 21:31:18 1(role: 1) vote to 0
+2024/02/19 21:31:18 0(role: 1) vote to 2
+2024/02/19 21:31:18 1(role: 1) vote to 2
+2024/02/19 21:31:18 1(role: 1) vote to 0
+2024/02/19 21:31:18 1 reject vote to 2 because of small term
+2024/02/19 21:31:18 2 reject vote to 0 because of small log
+2024/02/19 21:31:18 1(role: 1) vote to 0
+2024/02/19 21:31:18 0(role: 1) vote to 2
+2024/02/19 21:31:18 1(role: 1) vote to 2
+2024/02/19 21:31:18 0(role: 1) vote to 2
+2024/02/19 21:31:18 0(role: 1) vote to 2
+2024/02/19 21:31:18 1(role: 1) vote to 2
+2024/02/19 21:31:18 0(role: 1) vote to 2
+2024/02/19 21:31:18 0(role: 1) vote to 2
+2024/02/19 21:31:18 2 reject vote to 0 because of small log
+2024/02/19 21:31:18 1(role: 1) vote to 0
+2024/02/19 21:31:18 2 reject vote to 0 because of small log
+2024/02/19 21:31:18 1(role: 1) vote to 0
+2024/02/19 21:31:19 2 reject vote to 0 because of small log
+2024/02/19 21:31:19 1(role: 1) vote to 0
+2024/02/19 21:31:19 1(role: 1) vote to 0
+2024/02/19 21:31:19 1(role: 1) vote to 2
+2024/02/19 21:31:19 0(role: 1) vote to 2
+2024/02/19 21:31:19 0(role: 1) vote to 2
+2024/02/19 21:31:19 0 loss election because of other become leader
+2024/02/19 21:31:19 1 reject vote to 0 because of small term
+2024/02/19 21:31:19 1(role: 1) vote to 2
+2024/02/19 21:31:19 0(role: 1) vote to 2
+2024/02/19 21:31:19 1(role: 1) vote to 2
+2024/02/19 21:31:19 2 reject vote to 0 because of small log
+2024/02/19 21:31:19 0 reject vote to 2 because of small term
+2024/02/19 21:31:19 1(role: 1) vote to 2
+2024/02/19 21:31:19 1(role: 1) vote to 0
+2024/02/19 21:31:19 2 reject vote to 0 because of small log
+2024/02/19 21:31:19 1(role: 1) vote to 0
+2024/02/19 21:31:19 2 reject vote to 0 because of small log
+2024/02/19 21:31:19 1(role: 1) vote to 0
+2024/02/19 21:31:19 2 reject vote to 0 because of small log
+2024/02/19 21:31:19 2 reject vote to 0 because of small log
+2024/02/19 21:31:19 2 reject vote to 0 because of small log
+2024/02/19 21:31:19 1(role: 1) vote to 2
+2024/02/19 21:31:19 0(role: 1) vote to 2
+2024/02/19 21:31:19 1 reject vote to 2 because of small term
+2024/02/19 21:31:19 1(role: 1) vote to 2
+2024/02/19 21:31:19 0(role: 1) vote to 2
+2024/02/19 21:31:19 0 loss election because of other become leader
+2024/02/19 21:31:19 0 reject vote to 2 because of small term
+2024/02/19 21:31:19 0(role: 1) vote to 2
+2024/02/19 21:31:19 0(role: 1) vote to 2
+2024/02/19 21:31:19 1(role: 1) vote to 2
+2024/02/19 21:31:19 2 reject vote to 0 because of small log
+2024/02/19 21:31:19 0 reject vote to 2 because of small term
+2024/02/19 21:31:19 1(role: 1) vote to 0
+2024/02/19 21:31:19 1(role: 1) vote to 0
+2024/02/19 21:31:19 2 reject vote to 0 because of small log
+2024/02/19 21:31:19 2 reject vote to 0 because of small log
+2024/02/19 21:31:19 1(role: 1) vote to 0
+2024/02/19 21:31:19 2 reject vote to 0 because of small log
+2024/02/19 21:31:19 1 reject vote to 0 because of small term
+2024/02/19 21:31:19 2 reject vote to 0 because of small log
+2024/02/19 21:31:19 1(role: 1) vote to 0
+2024/02/19 21:31:19 2 reject vote to 0 because of small log
+2024/02/19 21:31:19 2 reject vote to 0 because of small log
+2024/02/19 21:31:19 1(role: 1) vote to 2
+2024/02/19 21:31:19 1(role: 1) vote to 2
+2024/02/19 21:31:19 0(role: 1) vote to 2
+2024/02/19 21:31:19 2 win election
+2024/02/19 21:31:19 2 reject vote to 0 because of small term
+2024/02/19 21:31:19 0 reject vote to 2 because of small term
+2024/02/19 21:31:19 0(role: 1) vote to 2
+2024/02/19 21:31:19 0 loss election because of other become leader
+2024/02/19 21:31:19 1(role: 1) vote to 2
+2024/02/19 21:31:19 0(role: 1) vote to 2
+2024/02/19 21:31:19 1 reject vote to 2 because of small term
+2024/02/19 21:31:19 0(role: 1) vote to 2
+2024/02/19 21:31:19 1(role: 1) vote to 2
+2024/02/19 21:31:19 2 win election
+2024/02/19 21:31:19 2 disconnect
+2024/02/19 21:31:19 4 connect
+2024/02/19 21:31:19 4 disconnect
+2024/02/19 21:31:20 2 connect
+2024/02/19 21:31:20 1(role: 1) vote to 0
+2024/02/19 21:31:20 2 disconnect
+2024/02/19 21:31:20 4 connect
+2024/02/19 21:31:20 4 disconnect
+2024/02/19 21:31:20 2 connect
+2024/02/19 21:31:20 2 disconnect
+2024/02/19 21:31:20 3 connect
+2024/02/19 21:31:20 2 reject vote to 0 because of small log
+2024/02/19 21:31:20 1(role: 1) vote to 0
+2024/02/19 21:31:20 3 disconnect
+2024/02/19 21:31:20 2 connect
+2024/02/19 21:31:20 1(role: 1) vote to 0
+2024/02/19 21:31:20 2 reject vote to 0 because of small log
+2024/02/19 21:31:20 2 reject vote to 0 because of small log
+2024/02/19 21:31:20 0(role: 1) vote to 2
+2024/02/19 21:31:20 1(role: 1) vote to 2
+2024/02/19 21:31:20 0(role: 1) vote to 2
+2024/02/19 21:31:20 0 loss election because of other become leader
+2024/02/19 21:31:20 1(role: 1) vote to 2
+2024/02/19 21:31:20 1 reject vote to 2 because of small term
+2024/02/19 21:31:20 0(role: 1) vote to 2
+2024/02/19 21:31:20 1(role: 1) vote to 2
+2024/02/19 21:31:20 0(role: 1) vote to 2
+2024/02/19 21:31:20 2 reject vote to 0 because of small log
+2024/02/19 21:31:20 1(role: 1) vote to 0
+2024/02/19 21:31:20 1(role: 1) vote to 0
+2024/02/19 21:31:20 2 reject vote to 0 because of small log
+2024/02/19 21:31:20 2 reject vote to 0 because of small log
+2024/02/19 21:31:20 1(role: 1) vote to 0
+2024/02/19 21:31:20 1(role: 1) vote to 0
+2024/02/19 21:31:20 1(role: 1) vote to 0
+2024/02/19 21:31:20 1(role: 1) vote to 0
+2024/02/19 21:31:20 1(role: 1) vote to 2
+2024/02/19 21:31:20 2 reject vote to 0 because of small term
+2024/02/19 21:31:20 0(role: 1) vote to 2
+2024/02/19 21:31:20 0 loss election because of other become leader
+2024/02/19 21:31:20 0(role: 1) vote to 2
+2024/02/19 21:31:20 0 loss election because of other become leader
+2024/02/19 21:31:20 0(role: 1) vote to 2
+2024/02/19 21:31:20 1(role: 1) vote to 2
+2024/02/19 21:31:20 1 reject vote to 2 because of small term
+2024/02/19 21:31:20 1 reject vote to 2 because of small term
+2024/02/19 21:31:20 0(role: 1) vote to 2
+2024/02/19 21:31:20 1(role: 1) vote to 2
+2024/02/19 21:31:20 2 reject vote to 0 because of small log
+2024/02/19 21:31:20 1(role: 1) vote to 0
+2024/02/19 21:31:20 2 reject vote to 0 because of small log
+2024/02/19 21:31:20 1(role: 1) vote to 0
+2024/02/19 21:31:20 2 reject vote to 0 because of small log
+2024/02/19 21:31:20 1(role: 1) vote to 0
+2024/02/19 21:31:20 2 reject vote to 0 because of small log
+2024/02/19 21:31:20 1(role: 1) vote to 0
+2024/02/19 21:31:20 1(role: 1) vote to 0
+2024/02/19 21:31:21 2 reject vote to 0 because of small log
+2024/02/19 21:31:21 1(role: 1) vote to 0
+2024/02/19 21:31:21 1(role: 1) vote to 0
+2024/02/19 21:31:21 2 reject vote to 0 because of small log
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 1(role: 1) vote to 2
+2024/02/19 21:31:21 0 reject vote to 2 because of small term
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 0 reject vote to 2 because of small term
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 1(role: 1) vote to 2
+2024/02/19 21:31:21 1(role: 1) vote to 2
+2024/02/19 21:31:21 1(role: 1) vote to 2
+2024/02/19 21:31:21 2 win election
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 1(role: 1) vote to 2
+2024/02/19 21:31:21 2 reject vote to 0 because of small log
+2024/02/19 21:31:21 1(role: 1) vote to 0
+2024/02/19 21:31:21 2 reject vote to 0 because of small log
+2024/02/19 21:31:21 1(role: 1) vote to 0
+2024/02/19 21:31:21 2 reject vote to 0 because of small log
+2024/02/19 21:31:21 1(role: 1) vote to 0
+2024/02/19 21:31:21 1(role: 1) vote to 0
+2024/02/19 21:31:21 1(role: 1) vote to 0
+2024/02/19 21:31:21 1(role: 1) vote to 0
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 0 loss election because of other become leader
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 1(role: 1) vote to 2
+2024/02/19 21:31:21 1 reject vote to 2 because of small term
+2024/02/19 21:31:21 1 reject vote to 2 because of small term
+2024/02/19 21:31:21 0 reject vote to 2 because of small term
+2024/02/19 21:31:21 1 reject vote to 2 because of small term
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 1 reject vote to 2 because of small term
+2024/02/19 21:31:21 1(role: 1) vote to 2
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 1(role: 1) vote to 2
+2024/02/19 21:31:21 1(role: 1) vote to 0
+2024/02/19 21:31:21 2 reject vote to 0 because of small log
+2024/02/19 21:31:21 1(role: 1) vote to 0
+2024/02/19 21:31:21 2 reject vote to 0 because of small log
+2024/02/19 21:31:21 1(role: 1) vote to 0
+2024/02/19 21:31:21 2 reject vote to 0 because of small log
+2024/02/19 21:31:21 2 reject vote to 0 because of small term
+2024/02/19 21:31:21 1(role: 1) vote to 0
+2024/02/19 21:31:21 2 reject vote to 0 because of small log
+2024/02/19 21:31:21 1(role: 1) vote to 2
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 1(role: 1) vote to 2
+2024/02/19 21:31:21 1(role: 1) vote to 2
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 0 loss election because of other become leader
+2024/02/19 21:31:21 1 reject vote to 2 because of small term
+2024/02/19 21:31:21 1 reject vote to 2 because of small term
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 1(role: 1) vote to 2
+2024/02/19 21:31:21 0(role: 1) vote to 2
+2024/02/19 21:31:21 0 reject vote to 2 because of small term
+2024/02/19 21:31:21 1 reject vote to 2 because of small term
+2024/02/19 21:31:22 2 reject vote to 0 because of small log
+2024/02/19 21:31:22 1(role: 1) vote to 0
+2024/02/19 21:31:22 1(role: 1) vote to 0
+2024/02/19 21:31:22 1(role: 1) vote to 0
+2024/02/19 21:31:22 2 reject vote to 0 because of small log
+2024/02/19 21:31:22 1(role: 1) vote to 0
+2024/02/19 21:31:22 1(role: 1) vote to 0
+2024/02/19 21:31:22 2 reject vote to 0 because of small log
+2024/02/19 21:31:22 2 reject vote to 0 because of small log
+2024/02/19 21:31:22 0(role: 1) vote to 2
+2024/02/19 21:31:22 1(role: 1) vote to 2
+2024/02/19 21:31:22 0(role: 1) vote to 2
+2024/02/19 21:31:22 0 loss election because of other become leader
+2024/02/19 21:31:22 1(role: 1) vote to 2
+2024/02/19 21:31:22 1(role: 1) vote to 2
+2024/02/19 21:31:22 1 reject vote to 2 because of small term
+2024/02/19 21:31:22 1 reject vote to 2 because of small term
+2024/02/19 21:31:22 0(role: 1) vote to 2
+2024/02/19 21:31:22 1 reject vote to 2 because of small term
+2024/02/19 21:31:22 0(role: 1) vote to 2
+2024/02/19 21:31:22 1(role: 1) vote to 2
+2024/02/19 21:31:22 0(role: 1) vote to 2
+2024/02/19 21:31:22 1 reject vote to 2 because of small term
+2024/02/19 21:31:22 0(role: 1) vote to 2
+2024/02/19 21:31:22 1(role: 1) vote to 0
+2024/02/19 21:31:22 1 reject vote to 2 because of small term
+2024/02/19 21:31:22 2 loss election because of other has high term, become follower
+2024/02/19 21:31:22 2 reject vote to 0 because of small log
+2024/02/19 21:31:22 1(role: 1) vote to 0
+2024/02/19 21:31:22 2 reject vote to 0 because of small log
+2024/02/19 21:31:22 1(role: 1) vote to 0
+2024/02/19 21:31:22 2 reject vote to 0 because of small log
+2024/02/19 21:31:22 1 reject vote to 0 because of small term
+2024/02/19 21:31:22 2 reject vote to 0 because of small log
+2024/02/19 21:31:22 1(role: 1) vote to 0
+2024/02/19 21:31:22 2 reject vote to 0 because of small log
+2024/02/19 21:31:22 2 reject vote to 0 because of small log
+2024/02/19 21:31:22 0(role: 1) vote to 2
+2024/02/19 21:31:22 0 reject vote to 2 because of small term
+2024/02/19 21:31:22 1(role: 1) vote to 2
+2024/02/19 21:31:22 1 reject vote to 2 because of small term
+2024/02/19 21:31:22 0(role: 1) vote to 2
+2024/02/19 21:31:22 0 loss election because of other become leader
+2024/02/19 21:31:22 0 reject vote to 2 because of small term
+2024/02/19 21:31:22 1(role: 1) vote to 2
+2024/02/19 21:31:22 0 reject vote to 2 because of small term
+2024/02/19 21:31:22 1(role: 1) vote to 2
+2024/02/19 21:31:22 0 reject vote to 2 because of small term
+2024/02/19 21:31:22 1 reject vote to 2 because of small term
+2024/02/19 21:31:22 0 reject vote to 2 because of small term
+2024/02/19 21:31:22 1 reject vote to 2 because of small term
+2024/02/19 21:31:22 0(role: 1) vote to 2
+2024/02/19 21:31:22 1(role: 1) vote to 2
+2024/02/19 21:31:22 2 reject vote to 0 because of small log
+2024/02/19 21:31:22 1(role: 1) vote to 0
+2024/02/19 21:31:22 1(role: 1) vote to 0
+2024/02/19 21:31:22 2 reject vote to 0 because of small log
+2024/02/19 21:31:22 2 reject vote to 0 because of small log
+2024/02/19 21:31:22 1(role: 1) vote to 0
+2024/02/19 21:31:22 2 reject vote to 0 because of small log
+2024/02/19 21:31:22 1(role: 1) vote to 0
+2024/02/19 21:31:23 1(role: 1) vote to 0
+2024/02/19 21:31:23 1(role: 1) vote to 0
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:23 0 loss election because of other become leader
+2024/02/19 21:31:23 1 reject vote to 2 because of small term
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 0 reject vote to 2 because of small term
+2024/02/19 21:31:23 0 reject vote to 2 because of small term
+2024/02/19 21:31:23 1 reject vote to 2 because of small term
+2024/02/19 21:31:23 0 reject vote to 2 because of small term
+2024/02/19 21:31:23 0 reject vote to 2 because of small term
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 1 reject vote to 2 because of small term
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:23 1 reject vote to 2 because of small term
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 2 win election
+2024/02/19 21:31:23 2 reject vote to 0 because of small log
+2024/02/19 21:31:23 1(role: 1) vote to 0
+2024/02/19 21:31:23 1(role: 1) vote to 0
+2024/02/19 21:31:23 2 reject vote to 0 because of small log
+2024/02/19 21:31:23 1(role: 1) vote to 0
+2024/02/19 21:31:23 2 reject vote to 0 because of small log
+2024/02/19 21:31:23 1(role: 1) vote to 0
+2024/02/19 21:31:23 1(role: 1) vote to 0
+2024/02/19 21:31:23 2 reject vote to 0 because of small log
+2024/02/19 21:31:23 2 reject vote to 0 because of small log
+2024/02/19 21:31:23 1(role: 1) vote to 0
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 1 reject vote to 0 because of small term
+2024/02/19 21:31:23 1 reject vote to 0 because of small term
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:23 0 loss election because of other become leader
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 1 reject vote to 2 because of small term
+2024/02/19 21:31:23 0 reject vote to 2 because of small term
+2024/02/19 21:31:23 0 reject vote to 2 because of small term
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:23 0 loss election because of other become leader
+2024/02/19 21:31:23 2 reject vote to 0 because of small term
+2024/02/19 21:31:23 1 reject vote to 2 because of small term
+2024/02/19 21:31:23 0 reject vote to 2 because of small term
+2024/02/19 21:31:23 1 reject vote to 2 because of small term
+2024/02/19 21:31:23 0 reject vote to 2 because of small term
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:23 0 reject vote to 2 because of small term
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:23 1(role: 1) vote to 0
+2024/02/19 21:31:23 1(role: 1) vote to 0
+2024/02/19 21:31:23 2 reject vote to 0 because of small log
+2024/02/19 21:31:23 0 reject vote to 2 because of small term
+2024/02/19 21:31:23 1(role: 1) vote to 0
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 1 reject vote to 2 because of small term
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:23 1 reject vote to 2 because of small term
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:23 1 reject vote to 2 because of small term
+2024/02/19 21:31:23 2 win election
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:23 0 reject vote to 2 because of small term
+2024/02/19 21:31:23 0 reject vote to 2 because of small term
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 2 win election
+2024/02/19 21:31:23 0 reject vote to 2 because of small term
+2024/02/19 21:31:23 0 reject vote to 2 because of small term
+2024/02/19 21:31:23 1 reject vote to 2 because of small term
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:23 1(role: 1) vote to 2
+2024/02/19 21:31:23 0(role: 1) vote to 2
+2024/02/19 21:31:24 1(role: 1) vote to 2
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 1(role: 1) vote to 2
+2024/02/19 21:31:24 0(role: 1) vote to 2
+2024/02/19 21:31:24 1(role: 1) vote to 2
+2024/02/19 21:31:24 0(role: 1) vote to 2
+2024/02/19 21:31:24 0 loss election because of other become leader
+2024/02/19 21:31:24 0(role: 1) vote to 2
+2024/02/19 21:31:24 1(role: 1) vote to 2
+2024/02/19 21:31:24 0 reject vote to 2 because of small term
+2024/02/19 21:31:24 0(role: 1) vote to 2
+2024/02/19 21:31:24 0(role: 1) vote to 2
+2024/02/19 21:31:24 1 reject vote to 2 because of small term
+2024/02/19 21:31:24 0 reject vote to 2 because of small term
+2024/02/19 21:31:24 1(role: 1) vote to 2
+2024/02/19 21:31:24 1 reject vote to 2 because of small term
+2024/02/19 21:31:24 1(role: 1) vote to 2
+2024/02/19 21:31:24 0(role: 1) vote to 2
+2024/02/19 21:31:24 0(role: 1) vote to 2
+2024/02/19 21:31:24 1(role: 1) vote to 2
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:24 0 reject vote to 2 because of small term
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 1(role: 1) vote to 2
+2024/02/19 21:31:24 0(role: 1) vote to 2
+2024/02/19 21:31:24 0 loss election because of other become leader
+2024/02/19 21:31:24 2 win election
+2024/02/19 21:31:24 0(role: 1) vote to 2
+2024/02/19 21:31:24 0 loss election because of other become leader
+2024/02/19 21:31:24 1(role: 1) vote to 2
+2024/02/19 21:31:24 1 reject vote to 2 because of small term
+2024/02/19 21:31:24 1 reject vote to 2 because of small term
+2024/02/19 21:31:24 1 reject vote to 2 because of small term
+2024/02/19 21:31:24 0 reject vote to 2 because of small term
+2024/02/19 21:31:24 2 reject vote to 0 because of small term
+2024/02/19 21:31:24 1 reject vote to 0 because of small term
+2024/02/19 21:31:24 0 reject vote to 2 because of small term
+2024/02/19 21:31:24 0 reject vote to 2 because of small term
+2024/02/19 21:31:24 1(role: 1) vote to 2
+2024/02/19 21:31:24 0(role: 1) vote to 2
+2024/02/19 21:31:24 1(role: 1) vote to 2
+2024/02/19 21:31:24 0(role: 1) vote to 2
+2024/02/19 21:31:24 1(role: 1) vote to 2
+2024/02/19 21:31:24 1(role: 1) vote to 2
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:24 0 reject vote to 2 because of small term
+2024/02/19 21:31:24 1(role: 1) vote to 2
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:24 1(role: 1) vote to 0
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:24 2 reject vote to 0 because of small log
+2024/02/19 21:31:25 0(role: 1) vote to 2
+2024/02/19 21:31:25 0 loss election because of other become leader
+2024/02/19 21:31:25 1(role: 1) vote to 2
+2024/02/19 21:31:25 2 reject vote to 0 because of small term
+2024/02/19 21:31:25 0(role: 1) vote to 2
+2024/02/19 21:31:25 0 reject vote to 2 because of small term
+2024/02/19 21:31:25 1(role: 1) vote to 2
+2024/02/19 21:31:25 1 reject vote to 2 because of small term
+2024/02/19 21:31:25 0 reject vote to 2 because of small term
+2024/02/19 21:31:25 0 reject vote to 2 because of small term
+2024/02/19 21:31:25 1(role: 1) vote to 2
+2024/02/19 21:31:25 1 reject vote to 2 because of small term
+2024/02/19 21:31:25 0 reject vote to 2 because of small term
+2024/02/19 21:31:25 0(role: 1) vote to 2
+2024/02/19 21:31:25 1(role: 1) vote to 2
+2024/02/19 21:31:25 1(role: 1) vote to 2
+2024/02/19 21:31:25 2 win election
+2024/02/19 21:31:25 2 reject vote to 0 because of small log
+2024/02/19 21:31:25 1(role: 1) vote to 0
+2024/02/19 21:31:25 2 reject vote to 0 because of small log
+2024/02/19 21:31:25 2 reject vote to 0 because of small log
+2024/02/19 21:31:25 2 reject vote to 0 because of small log
+2024/02/19 21:31:25 2 reject vote to 0 because of small log
+2024/02/19 21:31:25 2 reject vote to 0 because of small log
+2024/02/19 21:31:25 1(role: 1) vote to 2
+2024/02/19 21:31:25 0(role: 1) vote to 2
+2024/02/19 21:31:25 0 reject vote to 2 because of small term
+2024/02/19 21:31:25 0(role: 1) vote to 2
+2024/02/19 21:31:25 1(role: 1) vote to 2
+2024/02/19 21:31:25 1(role: 1) vote to 2
+2024/02/19 21:31:25 0(role: 1) vote to 2
+2024/02/19 21:31:25 0 reject vote to 2 because of small term
+2024/02/19 21:31:25 1 reject vote to 2 because of small term
+2024/02/19 21:31:25 0 reject vote to 2 because of small term
+2024/02/19 21:31:25 1(role: 1) vote to 2
+2024/02/19 21:31:25 2 reject vote to 0 because of small log
+2024/02/19 21:31:25 1(role: 1) vote to 0
+2024/02/19 21:31:25 2 reject vote to 0 because of small log
+2024/02/19 21:31:25 1(role: 1) vote to 0
+2024/02/19 21:31:25 2 reject vote to 0 because of small log
+2024/02/19 21:31:25 1(role: 1) vote to 0
+2024/02/19 21:31:25 1(role: 1) vote to 0
+2024/02/19 21:31:25 1(role: 1) vote to 0
+2024/02/19 21:31:25 0(role: 1) vote to 2
+2024/02/19 21:31:25 0 loss election because of other become leader
+2024/02/19 21:31:25 0(role: 1) vote to 2
+2024/02/19 21:31:25 0 loss election because of other become leader
+2024/02/19 21:31:25 1(role: 1) vote to 0
+2024/02/19 21:31:25 0 reject vote to 2 because of small term
+2024/02/19 21:31:25 0(role: 1) vote to 2
+2024/02/19 21:31:25 1(role: 1) vote to 2
+2024/02/19 21:31:25 0 reject vote to 2 because of small term
+2024/02/19 21:31:25 1(role: 1) vote to 2
+2024/02/19 21:31:25 1 reject vote to 2 because of small term
+2024/02/19 21:31:25 0(role: 1) vote to 2
+2024/02/19 21:31:26 1(role: 1) vote to 2
+2024/02/19 21:31:26 2 reject vote to 0 because of small log
+2024/02/19 21:31:26 1(role: 1) vote to 0
+2024/02/19 21:31:26 1(role: 1) vote to 0
+2024/02/19 21:31:26 1(role: 1) vote to 2
+2024/02/19 21:31:26 1 reject vote to 2 because of small term
+2024/02/19 21:31:26 0(role: 1) vote to 2
+2024/02/19 21:31:26 0(role: 1) vote to 2
+2024/02/19 21:31:26 0 reject vote to 2 because of small term
+2024/02/19 21:31:26 1(role: 1) vote to 2
+2024/02/19 21:31:26 0(role: 1) vote to 2
+2024/02/19 21:31:26 0 reject vote to 2 because of small term
+2024/02/19 21:31:26 1 reject vote to 2 because of small term
+2024/02/19 21:31:26 1(role: 1) vote to 2
+2024/02/19 21:31:26 0 reject vote to 2 because of small term
+2024/02/19 21:31:26 0(role: 1) vote to 2
+2024/02/19 21:31:26 1 reject vote to 2 because of small term
+2024/02/19 21:31:26 1 reject vote to 2 because of small term
+2024/02/19 21:31:26 0 reject vote to 2 because of small term
+2024/02/19 21:31:26 1 reject vote to 2 because of small term
+2024/02/19 21:31:26 1(role: 1) vote to 2
+2024/02/19 21:31:26 0(role: 1) vote to 2
+2024/02/19 21:31:26 2 reject vote to 0 because of small log
+2024/02/19 21:31:26 1(role: 1) vote to 2
+2024/02/19 21:31:26 1(role: 1) vote to 0
+2024/02/19 21:31:26 2 reject vote to 0 because of small log
+2024/02/19 21:31:26 2 reject vote to 0 because of small log
+2024/02/19 21:31:26 2 reject vote to 0 because of small log
+2024/02/19 21:31:26 1(role: 1) vote to 0
+2024/02/19 21:31:26 1(role: 1) vote to 0
+2024/02/19 21:31:26 2 reject vote to 0 because of small log
+2024/02/19 21:31:26 1(role: 1) vote to 0
+2024/02/19 21:31:26 1(role: 1) vote to 2
+2024/02/19 21:31:26 1(role: 1) vote to 2
+2024/02/19 21:31:26 1 reject vote to 2 because of small term
+2024/02/19 21:31:26 2 reject vote to 0 because of small term
+2024/02/19 21:31:26 0(role: 1) vote to 2
+2024/02/19 21:31:26 0 loss election because of other become leader
+2024/02/19 21:31:26 0 reject vote to 2 because of small term
+2024/02/19 21:31:26 0 reject vote to 2 because of small term
+2024/02/19 21:31:26 0 reject vote to 2 because of small term
+2024/02/19 21:31:26 0 reject vote to 2 because of small term
+2024/02/19 21:31:26 0 reject vote to 2 because of small term
+2024/02/19 21:31:26 0 reject vote to 2 because of small term
+2024/02/19 21:31:26 1 reject vote to 0 because of small term
+2024/02/19 21:31:26 1(role: 1) vote to 2
+2024/02/19 21:31:26 0(role: 1) vote to 2
+2024/02/19 21:31:26 0 loss election because of other become leader
+2024/02/19 21:31:26 1(role: 1) vote to 2
+2024/02/19 21:31:26 0 reject vote to 2 because of small term
+2024/02/19 21:31:26 0(role: 1) vote to 2
+2024/02/19 21:31:26 1(role: 1) vote to 2
+2024/02/19 21:31:26 2 reject vote to 0 because of small log
+2024/02/19 21:31:26 1(role: 1) vote to 0
+2024/02/19 21:31:26 2 reject vote to 0 because of small log
+2024/02/19 21:31:26 1(role: 1) vote to 0
+2024/02/19 21:31:26 2 reject vote to 0 because of small log
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 0 loss election because of other become leader
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 1 reject vote to 2 because of small term
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 2 reject vote to 0 because of small term
+2024/02/19 21:31:27 0 loss election because of other has high term, become follower
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 1 reject vote to 2 because of small term
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 1 reject vote to 2 because of small term
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 1 reject vote to 2 because of small term
+2024/02/19 21:31:27 1 reject vote to 2 because of small term
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 1 reject vote to 2 because of small term
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 1 reject vote to 0 because of small term
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 1 reject vote to 2 because of small term
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 1(role: 1) vote to 0
+2024/02/19 21:31:27 2 reject vote to 0 because of small log
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 1(role: 1) vote to 0
+2024/02/19 21:31:27 1(role: 1) vote to 0
+2024/02/19 21:31:27 1(role: 1) vote to 0
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 0 loss election because of other become leader
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 1 reject vote to 2 because of small term
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 1 reject vote to 2 because of small term
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 1 reject vote to 2 because of small term
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 1(role: 1) vote to 0
+2024/02/19 21:31:27 2 reject vote to 0 because of small log
+2024/02/19 21:31:27 2 reject vote to 0 because of small log
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 1(role: 1) vote to 0
+2024/02/19 21:31:27 2 reject vote to 0 because of small log
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 0 loss election because of other become leader
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 0 loss election because of other become leader
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 1 reject vote to 2 because of small term
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:27 1 reject vote to 2 because of small term
+2024/02/19 21:31:27 0 reject vote to 2 because of small term
+2024/02/19 21:31:27 2 reject vote to 0 because of small term
+2024/02/19 21:31:27 0(role: 1) vote to 2
+2024/02/19 21:31:27 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 1 reject vote to 2 because of small term
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 2 win election
+2024/02/19 21:31:28 follower 1 update log, args.PrevLogIndex: 3, lenOfLog: 29
+2024/02/19 21:31:28 follower 1 args.LeaderCommit:5 > rf.commitIndex:3, lenOfLog:29
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0 reject vote to 2 because of small term
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0 reject vote to 2 because of small term
+2024/02/19 21:31:28 1 reject vote to 2 because of small term
+2024/02/19 21:31:28 0 reject vote to 2 because of small term
+2024/02/19 21:31:28 0 reject vote to 2 because of small term
+2024/02/19 21:31:28 0 reject vote to 2 because of small term
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 0 reject vote to 2 because of small term
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 1 reject vote to 2 because of small term
+2024/02/19 21:31:28 1 reject vote to 2 because of small term
+2024/02/19 21:31:28 1 reject vote to 2 because of small term
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 0 reject vote to 2 because of small term
+2024/02/19 21:31:28 0 reject vote to 2 because of small term
+2024/02/19 21:31:28 1 reject vote to 2 because of small term
+2024/02/19 21:31:28 0 reject vote to 2 because of small term
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 1 reject vote to 2 because of small term
+2024/02/19 21:31:28 1 reject vote to 2 because of small term
+2024/02/19 21:31:28 0 reject vote to 2 because of small term
+2024/02/19 21:31:28 1 reject vote to 2 because of small term
+2024/02/19 21:31:28 1 reject vote to 2 because of small term
+2024/02/19 21:31:28 0 reject vote to 2 because of small term
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 2 win election
+2024/02/19 21:31:28 follower 1 update log, args.PrevLogIndex: 28, lenOfLog: 30
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 1(role: 1) vote to 2
+2024/02/19 21:31:28 0(role: 1) vote to 2
+2024/02/19 21:31:29 0(role: 1) vote to 2
+2024/02/19 21:31:29 0(role: 1) vote to 2
+2024/02/19 21:31:29 2 win election
+2024/02/19 21:31:29 follower 0 update log, args.PrevLogIndex: 6, lenOfLog: 32
+2024/02/19 21:31:29 2 disconnect
+2024/02/19 21:31:29 1(role: 1) vote to 0
+2024/02/19 21:31:29 2 connect
+2024/02/19 21:31:29 1(role: 1) vote to 2
+2024/02/19 21:31:29 2 reject vote to 0 because of small term
+2024/02/19 21:31:29 0 loss election because of other has high term, become follower
+2024/02/19 21:31:29 0(role: 1) vote to 2
+2024/02/19 21:31:29 1(role: 1) vote to 2
+2024/02/19 21:31:29 1(role: 1) vote to 2
+2024/02/19 21:31:29 1(role: 1) vote to 2
+2024/02/19 21:31:29 2 win election
+2024/02/19 21:31:29 follower 1 update log, args.PrevLogIndex: 29, lenOfLog: 38
+2024/02/19 21:31:29 follower 1 update log, args.PrevLogIndex: 29, lenOfLog: 40
+2024/02/19 21:31:29 2 disconnect
+2024/02/19 21:31:29 2 connect
+2024/02/19 21:31:29 2 disconnect
+2024/02/19 21:31:29 3 connect
+2024/02/19 21:31:29 3 disconnect
+2024/02/19 21:31:29 2 connect
+2024/02/19 21:31:29 2 disconnect
+2024/02/19 21:31:29 4 connect
+2024/02/19 21:31:30 1 reject vote to 0 because of small log
+2024/02/19 21:31:30 1 reject vote to 0 because of small log
+2024/02/19 21:31:30 4(role: 1) vote to 0
+2024/02/19 21:31:30 4(role: 1) vote to 0
+2024/02/19 21:31:30 4(role: 1) vote to 0
+2024/02/19 21:31:30 0(role: 1) vote to 1
+2024/02/19 21:31:30 0 loss election because of other become leader
+2024/02/19 21:31:30 4(role: 1) vote to 1
+2024/02/19 21:31:30 1 win election
+2024/02/19 21:31:30 1 disconnect
+2024/02/19 21:31:30 3 connect
+2024/02/19 21:31:30 3 disconnect
+2024/02/19 21:31:30 1 connect
+2024/02/19 21:31:30 1 disconnect
+2024/02/19 21:31:30 1 connect
+2024/02/19 21:31:30 1 disconnect
+2024/02/19 21:31:30 1 connect
+2024/02/19 21:31:30 1 disconnect
+2024/02/19 21:31:30 1 connect
+2024/02/19 21:31:30 1 disconnect
+2024/02/19 21:31:30 2 connect
+2024/02/19 21:31:30 0(role: 1) vote to 2
+2024/02/19 21:31:30 4(role: 1) vote to 2
+2024/02/19 21:31:30 0(role: 1) vote to 2
+2024/02/19 21:31:30 0(role: 1) vote to 2
+2024/02/19 21:31:30 0(role: 1) vote to 2
+2024/02/19 21:31:30 4(role: 1) vote to 2
+2024/02/19 21:31:30 4 reject vote to 2 because of small term
+2024/02/19 21:31:30 0(role: 1) vote to 2
+2024/02/19 21:31:30 4(role: 1) vote to 2
+2024/02/19 21:31:30 0(role: 1) vote to 2
+2024/02/19 21:31:30 0(role: 1) vote to 2
+2024/02/19 21:31:30 0 reject vote to 2 because of small term
+2024/02/19 21:31:30 4(role: 1) vote to 2
+2024/02/19 21:31:30 4 reject vote to 2 because of small term
+2024/02/19 21:31:30 4(role: 1) vote to 2
+2024/02/19 21:31:30 0 reject vote to 2 because of small term
+2024/02/19 21:31:30 0 reject vote to 2 because of small term
+2024/02/19 21:31:30 4(role: 1) vote to 2
+2024/02/19 21:31:30 4 reject vote to 2 because of small term
+2024/02/19 21:31:30 4 reject vote to 2 because of small term
+2024/02/19 21:31:30 0 reject vote to 2 because of small term
+2024/02/19 21:31:30 4 reject vote to 2 because of small term
+2024/02/19 21:31:30 0 reject vote to 2 because of small term
+2024/02/19 21:31:30 4 reject vote to 2 because of small term
+2024/02/19 21:31:30 0 reject vote to 2 because of small term
+2024/02/19 21:31:30 4 reject vote to 2 because of small term
+2024/02/19 21:31:30 0 reject vote to 2 because of small term
+2024/02/19 21:31:30 4 reject vote to 2 because of small term
+2024/02/19 21:31:30 4(role: 1) vote to 2
+2024/02/19 21:31:30 4(role: 1) vote to 2
+2024/02/19 21:31:30 2 win election
+2024/02/19 21:31:30 2 disconnect
+2024/02/19 21:31:30 4(role: 1) vote to 0
+2024/02/19 21:31:30 4(role: 1) vote to 0
+2024/02/19 21:31:30 2 connect
+2024/02/19 21:31:30 2 reject vote to 0 because of small term
+2024/02/19 21:31:30 0 loss election because of other has high term, become follower
+2024/02/19 21:31:30 0(role: 1) vote to 2
+2024/02/19 21:31:30 4(role: 1) vote to 2
+2024/02/19 21:31:30 0(role: 1) vote to 2
+2024/02/19 21:31:30 4(role: 1) vote to 2
+2024/02/19 21:31:30 4(role: 1) vote to 2
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 0 reject vote to 2 because of small term
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 4 reject vote to 2 because of small term
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 4 reject vote to 2 because of small term
+2024/02/19 21:31:31 4 reject vote to 2 because of small term
+2024/02/19 21:31:31 4 reject vote to 2 because of small term
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 0 reject vote to 2 because of small term
+2024/02/19 21:31:31 0 reject vote to 2 because of small term
+2024/02/19 21:31:31 4 reject vote to 2 because of small term
+2024/02/19 21:31:31 4 reject vote to 2 because of small term
+2024/02/19 21:31:31 4 reject vote to 2 because of small term
+2024/02/19 21:31:31 0 reject vote to 2 because of small term
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 2 win election
+2024/02/19 21:31:31 follower 0 update log, args.PrevLogIndex: 31, lenOfLog: 58
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 0 reject vote to 2 because of small term
+2024/02/19 21:31:31 4 reject vote to 2 because of small term
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 4 reject vote to 2 because of small term
+2024/02/19 21:31:31 4 reject vote to 2 because of small term
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 4 reject vote to 2 because of small term
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 0 reject vote to 2 because of small term
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 2 disconnect
+2024/02/19 21:31:31 2 connect
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 2 win election
+2024/02/19 21:31:31 follower 0 update log, args.PrevLogIndex: 57, lenOfLog: 59
+2024/02/19 21:31:31 follower 0 update log, args.PrevLogIndex: 57, lenOfLog: 60
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 0 reject vote to 2 because of small term
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 0(role: 1) vote to 2
+2024/02/19 21:31:31 0 reject vote to 2 because of small term
+2024/02/19 21:31:31 4(role: 1) vote to 2
+2024/02/19 21:31:31 4 reject vote to 2 because of small term
+2024/02/19 21:31:31 2 win election
+2024/02/19 21:31:31 follower 0 update log, args.PrevLogIndex: 59, lenOfLog: 61
+2024/02/19 21:31:31 4 reject vote to 2 because of small term
+2024/02/19 21:31:31 4 reject vote to 2 because of small term
+2024/02/19 21:31:32 2 disconnect
+2024/02/19 21:31:32 2 connect
+2024/02/19 21:31:32 2 disconnect
+2024/02/19 21:31:32 3 connect
+2024/02/19 21:31:32 3 disconnect
+2024/02/19 21:31:32 2 connect
+2024/02/19 21:31:32 2 disconnect
+2024/02/19 21:31:32 3 connect
+2024/02/19 21:31:32 3 disconnect
+2024/02/19 21:31:32 2 connect
+2024/02/19 21:31:32 2 disconnect
+2024/02/19 21:31:32 3 connect
+2024/02/19 21:31:32 3 disconnect
+2024/02/19 21:31:32 1 connect
+2024/02/19 21:31:32 1 disconnect
+2024/02/19 21:31:32 2 connect
+2024/02/19 21:31:32 2 disconnect
+2024/02/19 21:31:32 2 connect
+2024/02/19 21:31:32 follower 0 update log, args.PrevLogIndex: 60, lenOfLog: 79
+2024/02/19 21:31:32 follower 0 update log, args.PrevLogIndex: 60, lenOfLog: 79
+2024/02/19 21:31:32 follower 0 update log, args.PrevLogIndex: 60, lenOfLog: 79
+2024/02/19 21:31:32 4(role: 1) vote to 2
+2024/02/19 21:31:32 0(role: 1) vote to 2
+2024/02/19 21:31:32 0 reject vote to 2 because of small term
+2024/02/19 21:31:32 4 reject vote to 2 because of small term
+2024/02/19 21:31:32 0 reject vote to 2 because of small term
+2024/02/19 21:31:32 0(role: 1) vote to 2
+2024/02/19 21:31:32 4(role: 1) vote to 2
+2024/02/19 21:31:32 0 reject vote to 2 because of small term
+2024/02/19 21:31:32 4(role: 1) vote to 2
+2024/02/19 21:31:32 2 loss election because of other has high term, become follower
+2024/02/19 21:31:32 0 reject vote to 2 because of small term
+2024/02/19 21:31:32 4(role: 1) vote to 2
+2024/02/19 21:31:32 4 reject vote to 2 because of small term
+2024/02/19 21:31:32 4(role: 1) vote to 2
+2024/02/19 21:31:32 0(role: 1) vote to 2
+2024/02/19 21:31:32 4(role: 1) vote to 2
+2024/02/19 21:31:32 0(role: 1) vote to 2
+2024/02/19 21:31:32 0(role: 1) vote to 2
+2024/02/19 21:31:32 4(role: 1) vote to 2
+2024/02/19 21:31:32 0(role: 1) vote to 2
+2024/02/19 21:31:32 0(role: 1) vote to 2
+2024/02/19 21:31:32 4(role: 1) vote to 2
+2024/02/19 21:31:32 4 reject vote to 2 because of small term
+2024/02/19 21:31:32 0 reject vote to 2 because of small term
+2024/02/19 21:31:32 4 reject vote to 2 because of small term
+2024/02/19 21:31:32 4 reject vote to 2 because of small term
+2024/02/19 21:31:32 4 reject vote to 2 because of small term
+2024/02/19 21:31:32 0 reject vote to 2 because of small term
+2024/02/19 21:31:32 0 reject vote to 2 because of small term
+2024/02/19 21:31:32 4(role: 1) vote to 2
+2024/02/19 21:31:32 4(role: 1) vote to 2
+2024/02/19 21:31:32 0(role: 1) vote to 2
+2024/02/19 21:31:32 2 win election
+2024/02/19 21:31:32 follower 0 update log, args.PrevLogIndex: 78, lenOfLog: 80
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 4(role: 1) vote to 2
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 2 win election
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 4(role: 1) vote to 2
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 4 reject vote to 2 because of small term
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 4(role: 1) vote to 2
+2024/02/19 21:31:33 4(role: 1) vote to 2
+2024/02/19 21:31:33 4 reject vote to 2 because of small term
+2024/02/19 21:31:33 4(role: 1) vote to 2
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 4(role: 1) vote to 2
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 4(role: 1) vote to 2
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 4 reject vote to 2 because of small term
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 4(role: 1) vote to 2
+2024/02/19 21:31:33 4 reject vote to 2 because of small term
+2024/02/19 21:31:33 0 reject vote to 2 because of small term
+2024/02/19 21:31:33 4(role: 1) vote to 2
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 2 win election
+2024/02/19 21:31:33 follower 0 update log, args.PrevLogIndex: 79, lenOfLog: 84
+2024/02/19 21:31:33 follower 0 update log, args.PrevLogIndex: 79, lenOfLog: 84
+2024/02/19 21:31:33 follower 0 update log, args.PrevLogIndex: 79, lenOfLog: 84
+2024/02/19 21:31:33 4(role: 1) vote to 2
+2024/02/19 21:31:33 4 reject vote to 2 because of small term
+2024/02/19 21:31:33 4 reject vote to 2 because of small term
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 4 reject vote to 2 because of small term
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 0 reject vote to 2 because of small term
+2024/02/19 21:31:33 0(role: 1) vote to 2
+2024/02/19 21:31:33 4(role: 1) vote to 2
+2024/02/19 21:31:34 4(role: 1) vote to 2
+2024/02/19 21:31:34 2 win election
+2024/02/19 21:31:34 follower 0 update log, args.PrevLogIndex: 83, lenOfLog: 85
+2024/02/19 21:31:34 follower 0 update log, args.PrevLogIndex: 83, lenOfLog: 85
+2024/02/19 21:31:34 follower 0 update log, args.PrevLogIndex: 83, lenOfLog: 85
+2024/02/19 21:31:34 follower 0 update log, args.PrevLogIndex: 83, lenOfLog: 85
+2024/02/19 21:31:34 follower 0 update log, args.PrevLogIndex: 83, lenOfLog: 85
+2024/02/19 21:31:34 follower 0 update log, args.PrevLogIndex: 83, lenOfLog: 85
+2024/02/19 21:31:34 4(role: 1) vote to 2
+2024/02/19 21:31:34 4(role: 1) vote to 2
+2024/02/19 21:31:34 0(role: 1) vote to 2
+2024/02/19 21:31:34 0 reject vote to 2 because of small term
+2024/02/19 21:31:34 4 reject vote to 2 because of small term
+2024/02/19 21:31:34 4(role: 1) vote to 2
+2024/02/19 21:31:34 0(role: 1) vote to 2
+2024/02/19 21:31:34 2 win election
+2024/02/19 21:31:34 follower 0 update log, args.PrevLogIndex: 84, lenOfLog: 86
+2024/02/19 21:31:34 follower 0 update log, args.PrevLogIndex: 84, lenOfLog: 86
+2024/02/19 21:31:34 2 disconnect
+2024/02/19 21:31:34 2 connect
+2024/02/19 21:31:34 follower 0 update log, args.PrevLogIndex: 84, lenOfLog: 86
+2024/02/19 21:31:34 2 disconnect
+2024/02/19 21:31:34 2 connect
+2024/02/19 21:31:34 2 disconnect
+2024/02/19 21:31:34 2 connect
+2024/02/19 21:31:34 2 disconnect
+2024/02/19 21:31:34 3 connect
+2024/02/19 21:31:34 follower 0 update log, args.PrevLogIndex: 84, lenOfLog: 94
+2024/02/19 21:31:34 4(role: 1) vote to 0
+2024/02/19 21:31:34 3(role: 1) vote to 0
+2024/02/19 21:31:34 4(role: 1) vote to 0
+2024/02/19 21:31:34 3(role: 1) vote to 0
+2024/02/19 21:31:34 3 disconnect
+2024/02/19 21:31:34 2 connect
+2024/02/19 21:31:34 0(role: 1) vote to 2
+2024/02/19 21:31:34 0 loss election because of other become leader
+2024/02/19 21:31:34 4(role: 1) vote to 2
+2024/02/19 21:31:35 0(role: 1) vote to 2
+2024/02/19 21:31:35 2 win election
+2024/02/19 21:31:35 2 reject vote to 0 because of small term
+2024/02/19 21:31:35 2 disconnect
+2024/02/19 21:31:35 3 connect
+2024/02/19 21:31:35 3(role: 1) vote to 0
+2024/02/19 21:31:35 4(role: 1) vote to 0
+2024/02/19 21:31:35 0 win election
+2024/02/19 21:31:35 0 disconnect
+2024/02/19 21:31:35 0 connect
+2024/02/19 21:31:35 0 disconnect
+2024/02/19 21:31:35 1 connect
+2024/02/19 21:31:35 1 disconnect
+2024/02/19 21:31:35 1 connect
+2024/02/19 21:31:35 1 disconnect
+2024/02/19 21:31:35 0 connect
+2024/02/19 21:31:35 0 disconnect
+2024/02/19 21:31:35 2 connect
+2024/02/19 21:31:35 4(role: 1) vote to 2
+2024/02/19 21:31:35 3(role: 1) vote to 2
+2024/02/19 21:31:35 3(role: 1) vote to 2
+2024/02/19 21:31:35 4(role: 1) vote to 2
+2024/02/19 21:31:35 3(role: 1) vote to 2
+2024/02/19 21:31:35 3(role: 1) vote to 2
+2024/02/19 21:31:35 4(role: 1) vote to 2
+2024/02/19 21:31:35 3(role: 1) vote to 2
+2024/02/19 21:31:35 4 reject vote to 2 because of small term
+2024/02/19 21:31:35 3(role: 1) vote to 2
+2024/02/19 21:31:36 4(role: 1) vote to 2
+2024/02/19 21:31:36 3(role: 1) vote to 2
+2024/02/19 21:31:36 3(role: 1) vote to 2
+2024/02/19 21:31:36 2 win election
+2024/02/19 21:31:36 2 disconnect
+2024/02/19 21:31:36 0 connect
+2024/02/19 21:31:36 4(role: 1) vote to 0
+2024/02/19 21:31:36 3(role: 1) vote to 0
+2024/02/19 21:31:36 3(role: 1) vote to 0
+2024/02/19 21:31:36 4(role: 1) vote to 0
+2024/02/19 21:31:36 4(role: 1) vote to 0
+2024/02/19 21:31:36 0 win election
+2024/02/19 21:31:36 0 disconnect
+2024/02/19 21:31:36 0 connect
+2024/02/19 21:31:36 0 disconnect
+2024/02/19 21:31:36 0 connect
+2024/02/19 21:31:36 0 disconnect
+2024/02/19 21:31:36 1 connect
+2024/02/19 21:31:36 1 disconnect
+2024/02/19 21:31:36 0 connect
+2024/02/19 21:31:37 0 disconnect
+2024/02/19 21:31:37 0 connect
+2024/02/19 21:31:37 0 disconnect
+2024/02/19 21:31:37 1 connect
+2024/02/19 21:31:37 1 disconnect
+2024/02/19 21:31:37 0 connect
+2024/02/19 21:31:37 0 disconnect
+2024/02/19 21:31:37 0 connect
+2024/02/19 21:31:37 0 disconnect
+2024/02/19 21:31:37 1 connect
+2024/02/19 21:31:37 1 disconnect
+2024/02/19 21:31:37 2 connect
+2024/02/19 21:31:37 4(role: 1) vote to 2
+2024/02/19 21:31:37 3(role: 1) vote to 2
+2024/02/19 21:31:37 3(role: 1) vote to 2
+2024/02/19 21:31:37 4(role: 1) vote to 2
+2024/02/19 21:31:37 2 win election
+2024/02/19 21:31:38 2 disconnect
+2024/02/19 21:31:38 0 connect
+2024/02/19 21:31:38 0 disconnect
+2024/02/19 21:31:38 0 connect
+2024/02/19 21:31:38 0 disconnect
+2024/02/19 21:31:38 1 connect
+2024/02/19 21:31:38 1 disconnect
+2024/02/19 21:31:38 1 connect
+2024/02/19 21:31:38 1 disconnect
+2024/02/19 21:31:38 2 connect
+2024/02/19 21:31:38 2 disconnect
+2024/02/19 21:31:38 2 connect
+2024/02/19 21:31:38 2 disconnect
+2024/02/19 21:31:38 2 connect
+2024/02/19 21:31:38 2 disconnect
+2024/02/19 21:31:38 2 connect
+2024/02/19 21:31:38 2 disconnect
+2024/02/19 21:31:38 1 connect
+2024/02/19 21:31:38 1 disconnect
+2024/02/19 21:31:38 0 connect
+2024/02/19 21:31:38 0 disconnect
+2024/02/19 21:31:38 2 connect
+2024/02/19 21:31:38 2 disconnect
+2024/02/19 21:31:38 0 connect
+2024/02/19 21:31:38 0 disconnect
+2024/02/19 21:31:38 0 connect
+2024/02/19 21:31:38 0 disconnect
+2024/02/19 21:31:38 2 connect
+2024/02/19 21:31:38 2 disconnect
+2024/02/19 21:31:38 0 connect
+2024/02/19 21:31:38 3(role: 1) vote to 0
+2024/02/19 21:31:38 4(role: 1) vote to 0
+2024/02/19 21:31:38 3(role: 1) vote to 0
+2024/02/19 21:31:38 4(role: 1) vote to 0
+2024/02/19 21:31:38 4(role: 1) vote to 0
+2024/02/19 21:31:38 3(role: 1) vote to 0
+2024/02/19 21:31:38 3(role: 1) vote to 0
+2024/02/19 21:31:38 4(role: 1) vote to 0
+2024/02/19 21:31:38 0 disconnect
+2024/02/19 21:31:38 1 connect
+2024/02/19 21:31:38 4(role: 1) vote to 0
+2024/02/19 21:31:38 4(role: 1) vote to 1
+2024/02/19 21:31:38 3(role: 1) vote to 1
+2024/02/19 21:31:38 4(role: 1) vote to 1
+2024/02/19 21:31:38 3(role: 1) vote to 1
+2024/02/19 21:31:38 3(role: 1) vote to 1
+2024/02/19 21:31:38 1 win election
+2024/02/19 21:31:38 follower 3 update log, args.PrevLogIndex: 7, lenOfLog: 258
+2024/02/19 21:31:38 follower 3 args.LeaderCommit:5 > rf.commitIndex:4, lenOfLog:258
+2024/02/19 21:31:39 1 disconnect
+2024/02/19 21:31:39 1 connect
+2024/02/19 21:31:39 1 disconnect
+2024/02/19 21:31:39 1 connect
+2024/02/19 21:31:39 1 disconnect
+2024/02/19 21:31:39 2 connect
+2024/02/19 21:31:39 2 disconnect
+2024/02/19 21:31:39 2 connect
+2024/02/19 21:31:39 2 disconnect
+2024/02/19 21:31:39 2 connect
+2024/02/19 21:31:39 2 disconnect
+2024/02/19 21:31:39 2 connect
+2024/02/19 21:31:39 2 disconnect
+2024/02/19 21:31:39 0 connect
+2024/02/19 21:31:39 3 reject vote to 0 because of small log
+2024/02/19 21:31:39 4(role: 1) vote to 0
+2024/02/19 21:31:39 3 reject vote to 0 because of small log
+2024/02/19 21:31:39 3 reject vote to 0 because of small log
+2024/02/19 21:31:39 4(role: 1) vote to 0
+2024/02/19 21:31:39 3 reject vote to 0 because of small log
+2024/02/19 21:31:39 4(role: 1) vote to 0
+2024/02/19 21:31:39 4(role: 1) vote to 0
+2024/02/19 21:31:39 4(role: 1) vote to 0
+2024/02/19 21:31:39 4(role: 1) vote to 0
+2024/02/19 21:31:39 4(role: 1) vote to 0
+2024/02/19 21:31:39 4(role: 1) vote to 0
+2024/02/19 21:31:39 3 reject vote to 0 because of small log
+2024/02/19 21:31:39 3 reject vote to 0 because of small log
+2024/02/19 21:31:39 4(role: 1) vote to 3
+2024/02/19 21:31:39 0(role: 1) vote to 3
+2024/02/19 21:31:39 3 reject vote to 0 because of small log
+2024/02/19 21:31:39 4(role: 1) vote to 0
+2024/02/19 21:31:39 4(role: 1) vote to 0
+2024/02/19 21:31:39 3 reject vote to 0 because of small log
+2024/02/19 21:31:39 3 reject vote to 0 because of small log
+2024/02/19 21:31:39 3 reject vote to 0 because of small log
+2024/02/19 21:31:40 4(role: 1) vote to 3
+2024/02/19 21:31:40 4 reject vote to 3 because of small term
+2024/02/19 21:31:40 4(role: 1) vote to 3
+2024/02/19 21:31:40 0(role: 1) vote to 3
+2024/02/19 21:31:40 0 reject vote to 3 because of small term
+2024/02/19 21:31:40 3 reject vote to 0 because of small log
+2024/02/19 21:31:40 4(role: 1) vote to 0
+2024/02/19 21:31:40 3 reject vote to 0 because of small log
+2024/02/19 21:31:40 4(role: 1) vote to 0
+2024/02/19 21:31:40 4(role: 1) vote to 0
+2024/02/19 21:31:40 4(role: 1) vote to 0
+2024/02/19 21:31:40 4(role: 1) vote to 0
+2024/02/19 21:31:40 3 reject vote to 0 because of small log
+2024/02/19 21:31:40 3 reject vote to 0 because of small log
+2024/02/19 21:31:40 3 reject vote to 0 because of small log
+2024/02/19 21:31:40 4(role: 1) vote to 3
+2024/02/19 21:31:40 0(role: 1) vote to 3
+2024/02/19 21:31:40 4 reject vote to 3 because of small term
+2024/02/19 21:31:40 4 reject vote to 3 because of small term
+2024/02/19 21:31:40 0 reject vote to 3 because of small term
+2024/02/19 21:31:40 0(role: 1) vote to 3
+2024/02/19 21:31:40 0 loss election because of other become leader
+2024/02/19 21:31:40 4(role: 1) vote to 0
+2024/02/19 21:31:40 3 reject vote to 0 because of small log
+2024/02/19 21:31:40 3 reject vote to 0 because of small log
+2024/02/19 21:31:40 4(role: 1) vote to 0
+2024/02/19 21:31:40 4(role: 1) vote to 0
+2024/02/19 21:31:40 4(role: 1) vote to 0
+2024/02/19 21:31:40 3 reject vote to 0 because of small log
+2024/02/19 21:31:40 3 reject vote to 0 because of small log
+2024/02/19 21:31:40 3 reject vote to 0 because of small log
+2024/02/19 21:31:40 3 reject vote to 0 because of small log
+2024/02/19 21:31:40 4(role: 1) vote to 3
+2024/02/19 21:31:40 0(role: 1) vote to 3
+2024/02/19 21:31:40 4 reject vote to 3 because of small term
+2024/02/19 21:31:40 0 loss election because of other become leader
+2024/02/19 21:31:40 4 reject vote to 3 because of small term
+2024/02/19 21:31:40 0(role: 1) vote to 3
+2024/02/19 21:31:40 0(role: 1) vote to 3
+2024/02/19 21:31:40 4 reject vote to 3 because of small term
+2024/02/19 21:31:40 0(role: 1) vote to 3
+2024/02/19 21:31:40 3 reject vote to 0 because of small log
+2024/02/19 21:31:40 4(role: 1) vote to 0
+2024/02/19 21:31:41 3 reject vote to 0 because of small log
+2024/02/19 21:31:41 4(role: 1) vote to 0
+2024/02/19 21:31:41 3 reject vote to 0 because of small log
+2024/02/19 21:31:41 4(role: 1) vote to 0
+2024/02/19 21:31:41 4(role: 1) vote to 0
+2024/02/19 21:31:41 3 reject vote to 0 because of small log
+2024/02/19 21:31:41 4(role: 1) vote to 0
+2024/02/19 21:31:41 3 reject vote to 0 because of small log
+2024/02/19 21:31:41 0(role: 1) vote to 3
+2024/02/19 21:31:41 0 loss election because of other become leader
+2024/02/19 21:31:41 4(role: 1) vote to 3
+2024/02/19 21:31:41 4(role: 1) vote to 3
+2024/02/19 21:31:41 3 reject vote to 0 because of small term
+2024/02/19 21:31:41 4(role: 1) vote to 3
+2024/02/19 21:31:41 0 reject vote to 3 because of small term
+2024/02/19 21:31:41 0 loss election because of other become leader
+2024/02/19 21:31:41 0(role: 1) vote to 3
+2024/02/19 21:31:41 4 reject vote to 0 because of small term
+2024/02/19 21:31:41 4(role: 1) vote to 3
+2024/02/19 21:31:41 4(role: 1) vote to 0
+2024/02/19 21:31:41 3 reject vote to 0 because of small log
+2024/02/19 21:31:41 4(role: 1) vote to 0
+2024/02/19 21:31:41 3 reject vote to 0 because of small log
+2024/02/19 21:31:41 4(role: 1) vote to 0
+2024/02/19 21:31:41 4(role: 1) vote to 0
+2024/02/19 21:31:41 4(role: 1) vote to 0
+2024/02/19 21:31:41 3 reject vote to 0 because of small log
+2024/02/19 21:31:41 2 reject vote to 0 because of small log
+2024/02/19 21:31:41 1 reject vote to 0 because of small log
+2024/02/19 21:31:41 1 reject vote to 3 because of small log
+2024/02/19 21:31:41 1 reject vote to 3 because of small log
+2024/02/19 21:31:41 0 loss election because of other become leader
+2024/02/19 21:31:41 0(role: 1) vote to 3
+2024/02/19 21:31:41 2(role: 1) vote to 3
+2024/02/19 21:31:41 2(role: 1) vote to 3
+2024/02/19 21:31:41 0(role: 1) vote to 3
+2024/02/19 21:31:41 4(role: 1) vote to 3
+2024/02/19 21:31:41 0(role: 1) vote to 3
+2024/02/19 21:31:41 2(role: 1) vote to 3
+2024/02/19 21:31:41 1 reject vote to 3 because of small log
+2024/02/19 21:31:41 1 reject vote to 3 because of small term
+2024/02/19 21:31:41 0(role: 1) vote to 3
+2024/02/19 21:31:41 4(role: 1) vote to 3
+2024/02/19 21:31:41 4 reject vote to 3 because of small term
+2024/02/19 21:31:41 4(role: 1) vote to 3
+2024/02/19 21:31:41 2 reject vote to 3 because of small term
+2024/02/19 21:31:41 2(role: 1) vote to 3
+2024/02/19 21:31:41 1 reject vote to 3 because of small term
+2024/02/19 21:31:41 4(role: 1) vote to 3
+2024/02/19 21:31:41 0 reject vote to 3 because of small term
+2024/02/19 21:31:41 2 reject vote to 0 because of small log
+2024/02/19 21:31:41 4(role: 1) vote to 0
+2024/02/19 21:31:41 1 reject vote to 0 because of small log
+2024/02/19 21:31:41 3 reject vote to 0 because of small log
+2024/02/19 21:31:41 0 reject vote to 3 because of small term
+2024/02/19 21:31:41 4 reject vote to 3 because of small term
+2024/02/19 21:31:41 2 reject vote to 3 because of small term
+2024/02/19 21:31:41 3 reject vote to 0 because of small log
+2024/02/19 21:31:41 2 reject vote to 0 because of small log
+2024/02/19 21:31:41 1 reject vote to 0 because of small log
+2024/02/19 21:31:41 2 reject vote to 0 because of small log
+2024/02/19 21:31:41 1 reject vote to 0 because of small log
+2024/02/19 21:31:41 2 reject vote to 0 because of small log
+2024/02/19 21:31:41 3 loss election because of other become leader
+2024/02/19 21:31:41 3(role: 1) vote to 1
+2024/02/19 21:31:41 4(role: 1) vote to 1
+2024/02/19 21:31:41 2(role: 1) vote to 1
+2024/02/19 21:31:41 0(role: 1) vote to 1
+2024/02/19 21:31:41 4(role: 1) vote to 1
+2024/02/19 21:31:41 3(role: 1) vote to 1
+2024/02/19 21:31:41 1 win election
+2024/02/19 21:31:41 0 loss election because of other become leader
+2024/02/19 21:31:41 0(role: 1) vote to 1
+2024/02/19 21:31:42 4(role: 1) vote to 3
+2024/02/19 21:31:42 1 reject vote to 3 because of small log
+2024/02/19 21:31:42 4(role: 1) vote to 3
+2024/02/19 21:31:42 4(role: 1) vote to 3
+2024/02/19 21:31:42 2(role: 1) vote to 3
+2024/02/19 21:31:42 2 reject vote to 3 because of small term
+2024/02/19 21:31:42 1 reject vote to 3 because of small log
+2024/02/19 21:31:42 1 reject vote to 3 because of small term
+2024/02/19 21:31:42 0(role: 1) vote to 3
+2024/02/19 21:31:42 0(role: 1) vote to 3
+2024/02/19 21:31:42 1 reject vote to 3 because of small term
+2024/02/19 21:31:42 2(role: 1) vote to 3
+2024/02/19 21:31:42 0(role: 1) vote to 3
+2024/02/19 21:31:42 0(role: 1) vote to 3
+2024/02/19 21:31:42 4 reject vote to 3 because of small term
+2024/02/19 21:31:42 2(role: 1) vote to 3
+2024/02/19 21:31:42 2(role: 1) vote to 3
+2024/02/19 21:31:42 0(role: 1) vote to 3
+2024/02/19 21:31:42 4(role: 1) vote to 3
+2024/02/19 21:31:42 4(role: 1) vote to 3
+2024/02/19 21:31:42 2(role: 1) vote to 3
+2024/02/19 21:31:42 0(role: 1) vote to 3
+2024/02/19 21:31:42 2(role: 1) vote to 3
+2024/02/19 21:31:42 0(role: 1) vote to 3
+2024/02/19 21:31:42 4(role: 1) vote to 3
+2024/02/19 21:31:42 2(role: 1) vote to 3
+2024/02/19 21:31:42 0(role: 1) vote to 3
+2024/02/19 21:31:42 0(role: 1) vote to 3
+2024/02/19 21:31:42 4(role: 1) vote to 1
+2024/02/19 21:31:42 2(role: 1) vote to 1
+2024/02/19 21:31:42 1 win election
+2024/02/19 21:31:42 2 reject vote to 3 because of small term
+2024/02/19 21:31:42 3 loss election because of other become leader
+2024/02/19 21:31:42 3 loss election because of other become leader
+2024/02/19 21:31:42 3(role: 1) vote to 1
+2024/02/19 21:31:42 0(role: 1) vote to 1
+2024/02/19 21:31:42 0 reject vote to 3 because of small term
+2024/02/19 21:31:42 4(role: 1) vote to 3
+2024/02/19 21:31:42 0(role: 1) vote to 3
+2024/02/19 21:31:42 1 reject vote to 3 because of small log
+2024/02/19 21:31:42 1 reject vote to 3 because of small term
+2024/02/19 21:31:42 2(role: 1) vote to 3
+2024/02/19 21:31:42 4(role: 1) vote to 3
+2024/02/19 21:31:42 2(role: 1) vote to 3
+2024/02/19 21:31:42 4 reject vote to 3 because of small term
+2024/02/19 21:31:42 1 reject vote to 3 because of small log
+2024/02/19 21:31:42 1 reject vote to 3 because of small log
+2024/02/19 21:31:42 0(role: 1) vote to 3
+2024/02/19 21:31:42 2(role: 1) vote to 3
+2024/02/19 21:31:42 4(role: 1) vote to 3
+2024/02/19 21:31:42 1 reject vote to 3 because of small log
+2024/02/19 21:31:42 2(role: 1) vote to 3
+2024/02/19 21:31:42 4(role: 1) vote to 3
+2024/02/19 21:31:42 3 win election
+2024/02/19 21:31:42 1 reject vote to 3 because of small log
+2024/02/19 21:31:42 follower 1 update log, args.PrevLogIndex: 257, lenOfLog: 259
+2024/02/19 21:31:42 follower 1 update log, args.PrevLogIndex: 257, lenOfLog: 259
+2024/02/19 21:31:42 4(role: 1) vote to 3
+2024/02/19 21:31:42 2(role: 1) vote to 3
+2024/02/19 21:31:42 3 win election
+2024/02/19 21:31:42 0(role: 1) vote to 3
+2024/02/19 21:31:42 1(role: 1) vote to 3
+2024/02/19 21:31:42 follower 1 update log, args.PrevLogIndex: 258, lenOfLog: 260
+2024/02/19 21:31:42 2(role: 1) vote to 3
+2024/02/19 21:31:42 4(role: 1) vote to 3
+2024/02/19 21:31:42 2 reject vote to 3 because of small term
+2024/02/19 21:31:42 4 reject vote to 3 because of small term
+2024/02/19 21:31:42 1(role: 1) vote to 3
+2024/02/19 21:31:42 0(role: 1) vote to 3
+2024/02/19 21:31:42 1(role: 1) vote to 3
+2024/02/19 21:31:42 2(role: 1) vote to 3
+2024/02/19 21:31:42 3 win election
+2024/02/19 21:31:42 4(role: 1) vote to 3
+2024/02/19 21:31:42 0(role: 1) vote to 3
+2024/02/19 21:31:42 follower 1 update log, args.PrevLogIndex: 259, lenOfLog: 261
+2024/02/19 21:31:43 follower 1 update log, args.PrevLogIndex: 259, lenOfLog: 261
+2024/02/19 21:31:43 follower 1 update log, args.PrevLogIndex: 259, lenOfLog: 261
+2024/02/19 21:31:43 follower 1 update log, args.PrevLogIndex: 259, lenOfLog: 261
+2024/02/19 21:31:43 2(role: 1) vote to 3
+2024/02/19 21:31:43 0(role: 1) vote to 3
+2024/02/19 21:31:43 follower 1 update log, args.PrevLogIndex: 259, lenOfLog: 261
+2024/02/19 21:31:43 1(role: 1) vote to 3
+2024/02/19 21:31:43 4(role: 1) vote to 3
+2024/02/19 21:31:43 3 win election
+2024/02/19 21:31:43 2(role: 1) vote to 3
+2024/02/19 21:31:43 follower 1 update log, args.PrevLogIndex: 260, lenOfLog: 262
+2024/02/19 21:31:43 follower 1 update log, args.PrevLogIndex: 260, lenOfLog: 262
+2024/02/19 21:31:43 0(role: 1) vote to 3
+2024/02/19 21:31:43 follower 1 update log, args.PrevLogIndex: 260, lenOfLog: 262
+2024/02/19 21:31:43 4(role: 1) vote to 3
+2024/02/19 21:31:43 1(role: 1) vote to 3
+2024/02/19 21:31:43 3 win election
+2024/02/19 21:31:43 2(role: 1) vote to 3
+2024/02/19 21:31:43 follower 1 update log, args.PrevLogIndex: 261, lenOfLog: 263
+2024/02/19 21:31:43 follower 4 update log, args.PrevLogIndex: 7, lenOfLog: 263
+2024/02/19 21:31:43 follower 4 args.LeaderCommit:5 > rf.commitIndex:4, lenOfLog:263
+2024/02/19 21:31:43 follower 4 update log, args.PrevLogIndex: 7, lenOfLog: 263
+2024/02/19 21:31:43 follower 1 update log, args.PrevLogIndex: 261, lenOfLog: 263
+2024/02/19 21:31:43 1 reject vote to 0 because of small log
+2024/02/19 21:31:43 4 reject vote to 0 because of small log
+2024/02/19 21:31:43 2 reject vote to 0 because of small log
+2024/02/19 21:31:43 3 reject vote to 0 because of small log
+2024/02/19 21:31:43 4 reject vote to 0 because of small log
+2024/02/19 21:31:43 3 reject vote to 0 because of small log
+2024/02/19 21:31:43 1 reject vote to 0 because of small log
+2024/02/19 21:31:43 1 reject vote to 0 because of small log
+2024/02/19 21:31:43 4 reject vote to 0 because of small log
+2024/02/19 21:31:43 3 reject vote to 0 because of small log
+2024/02/19 21:31:43 1 reject vote to 0 because of small log
+2024/02/19 21:31:43 4 reject vote to 0 because of small log
+2024/02/19 21:31:43 3 reject vote to 0 because of small log
+2024/02/19 21:31:43 4(role: 1) vote to 1
+2024/02/19 21:31:43 2 reject vote to 0 because of small log
+2024/02/19 21:31:43 4(role: 1) vote to 1
+2024/02/19 21:31:43 3 reject vote to 0 because of small log
+2024/02/19 21:31:43 1 reject vote to 0 because of small log
+2024/02/19 21:31:43 2(role: 1) vote to 1
+2024/02/19 21:31:43 3 reject vote to 0 because of small log
+2024/02/19 21:31:43 4 reject vote to 0 because of small log
+2024/02/19 21:31:43 3(role: 1) vote to 1
+2024/02/19 21:31:43 2(role: 1) vote to 1
+2024/02/19 21:31:43 4 reject vote to 0 because of small log
+2024/02/19 21:31:43 1 reject vote to 0 because of small log
+2024/02/19 21:31:43 2 reject vote to 0 because of small log
+2024/02/19 21:31:43 3(role: 1) vote to 1
+2024/02/19 21:31:43 1 win election
+2024/02/19 21:31:43 2 reject vote to 0 because of small log
+2024/02/19 21:31:43 follower 3 update log, args.PrevLogIndex: 262, lenOfLog: 264
+2024/02/19 21:31:43 0 loss election because of other become leader
+2024/02/19 21:31:43 2(role: 1) vote to 1
+2024/02/19 21:31:43 4 reject vote to 0 because of small log
+2024/02/19 21:31:43 2 reject vote to 0 because of small log
+2024/02/19 21:31:43 4 reject vote to 0 because of small log
+2024/02/19 21:31:43 follower 3 update log, args.PrevLogIndex: 263, lenOfLog: 265
+2024/02/19 21:31:43 1 reject vote to 0 because of small log
+2024/02/19 21:31:43 3 reject vote to 0 because of small log
+2024/02/19 21:31:44 1 reject vote to 0 because of small log
+2024/02/19 21:31:44 2 reject vote to 0 because of small log
+2024/02/19 21:31:44 4 reject vote to 0 because of small log
+2024/02/19 21:31:44 1 reject vote to 0 because of small log
+2024/02/19 21:31:44 4 reject vote to 0 because of small log
+2024/02/19 21:31:44 1 reject vote to 0 because of small log
+2024/02/19 21:31:44 4 reject vote to 0 because of small log
+2024/02/19 21:31:44 4 reject vote to 0 because of small log
+2024/02/19 21:31:44 0(role: 1) vote to 1
+2024/02/19 21:31:44 3(role: 1) vote to 1
+2024/02/19 21:31:44 2(role: 1) vote to 1
+2024/02/19 21:31:44 4(role: 1) vote to 1
+2024/02/19 21:31:44 0 loss election because of other become leader
+2024/02/19 21:31:44 0(role: 1) vote to 1
+2024/02/19 21:31:44 2(role: 1) vote to 1
+2024/02/19 21:31:44 3(role: 1) vote to 1
+2024/02/19 21:31:44 0(role: 1) vote to 1
+2024/02/19 21:31:44 0(role: 1) vote to 1
+2024/02/19 21:31:44 4(role: 1) vote to 1
+2024/02/19 21:31:44 3(role: 1) vote to 1
+2024/02/19 21:31:44 4(role: 1) vote to 1
+2024/02/19 21:31:44 0(role: 1) vote to 1
+2024/02/19 21:31:44 3(role: 1) vote to 1
+2024/02/19 21:31:44 4(role: 1) vote to 1
+2024/02/19 21:31:44 3(role: 1) vote to 1
+2024/02/19 21:31:44 0(role: 1) vote to 1
+2024/02/19 21:31:44 1 win election
+2024/02/19 21:31:44 follower 3 update log, args.PrevLogIndex: 264, lenOfLog: 266
+2024/02/19 21:31:44 follower 4 update log, args.PrevLogIndex: 262, lenOfLog: 266
+2024/02/19 21:31:44 follower 4 update log, args.PrevLogIndex: 262, lenOfLog: 266
+2024/02/19 21:31:44 follower 4 update log, args.PrevLogIndex: 262, lenOfLog: 266
+2024/02/19 21:31:44 follower 4 update log, args.PrevLogIndex: 262, lenOfLog: 266
+2024/02/19 21:31:44 follower 4 update log, args.PrevLogIndex: 262, lenOfLog: 266
+2024/02/19 21:31:44 follower 4 update log, args.PrevLogIndex: 262, lenOfLog: 266
+2024/02/19 21:31:44 follower 4 update log, args.PrevLogIndex: 262, lenOfLog: 266
+2024/02/19 21:31:45 follower 4 update log, args.PrevLogIndex: 262, lenOfLog: 266
+2024/02/19 21:31:45 1 reject vote to 0 because of small log
+2024/02/19 21:31:45 3 reject vote to 0 because of small log
+2024/02/19 21:31:45 follower 4 update log, args.PrevLogIndex: 262, lenOfLog: 266
+2024/02/19 21:31:45 2 reject vote to 0 because of small log
+2024/02/19 21:31:45 4 reject vote to 0 because of small log
+2024/02/19 21:31:45 4 reject vote to 0 because of small log
+2024/02/19 21:31:45 2 reject vote to 0 because of small log
+2024/02/19 21:31:45 3 reject vote to 0 because of small log
+2024/02/19 21:31:45 3 reject vote to 0 because of small log
+2024/02/19 21:31:45 4 reject vote to 0 because of small log
+2024/02/19 21:31:45 4 reject vote to 0 because of small log
+2024/02/19 21:31:45 4 reject vote to 0 because of small log
+2024/02/19 21:31:45 3 reject vote to 0 because of small log
+2024/02/19 21:31:45 1 reject vote to 0 because of small log
+2024/02/19 21:31:45 4 reject vote to 0 because of small log
+2024/02/19 21:31:45 2 reject vote to 0 because of small log
+2024/02/19 21:31:45 3 reject vote to 0 because of small log
+2024/02/19 21:31:45 2 reject vote to 0 because of small log
+2024/02/19 21:31:45 1 reject vote to 0 because of small term
+2024/02/19 21:31:45 3(role: 1) vote to 1
+2024/02/19 21:31:45 4(role: 1) vote to 1
+2024/02/19 21:31:45 0(role: 1) vote to 1
+2024/02/19 21:31:45 0 loss election because of other become leader
+2024/02/19 21:31:45 2(role: 1) vote to 1
+2024/02/19 21:31:45 4(role: 1) vote to 1
+2024/02/19 21:31:45 3(role: 1) vote to 1
+2024/02/19 21:31:45 2(role: 1) vote to 1
+2024/02/19 21:31:45 3(role: 1) vote to 1
+2024/02/19 21:31:45 4(role: 1) vote to 1
+2024/02/19 21:31:45 2(role: 1) vote to 1
+2024/02/19 21:31:45 1 win election
+2024/02/19 21:31:45 follower 3 update log, args.PrevLogIndex: 265, lenOfLog: 267
+2024/02/19 21:31:45 3 reject vote to 1 because of small log
+2024/02/19 21:31:45 follower 4 update log, args.PrevLogIndex: 265, lenOfLog: 267
+2024/02/19 21:31:45 follower 3 update log, args.PrevLogIndex: 265, lenOfLog: 267
+2024/02/19 21:31:45 leader 1 apply command: 2060, commandIndex: 2, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3164, commandIndex: 3, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4343, commandIndex: 4, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6555, commandIndex: 5, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3566, commandIndex: 6, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3587, commandIndex: 7, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1823, commandIndex: 8, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5703, commandIndex: 9, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5490, commandIndex: 10, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7092, commandIndex: 11, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7801, commandIndex: 12, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4733, commandIndex: 13, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 8677, commandIndex: 14, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1538, commandIndex: 15, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4356, commandIndex: 16, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 466, commandIndex: 17, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9994, commandIndex: 18, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1783, commandIndex: 19, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6137, commandIndex: 20, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 993, commandIndex: 21, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3852, commandIndex: 22, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6303, commandIndex: 23, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3022, commandIndex: 24, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1124, commandIndex: 25, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9199, commandIndex: 26, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1227, commandIndex: 27, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9781, commandIndex: 28, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7951, commandIndex: 29, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3247, commandIndex: 30, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 8600, commandIndex: 31, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5667, commandIndex: 32, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7324, commandIndex: 33, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6687, commandIndex: 34, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5986, commandIndex: 35, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 879, commandIndex: 36, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1201, commandIndex: 37, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2771, commandIndex: 38, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9571, commandIndex: 39, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6239, commandIndex: 40, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5608, commandIndex: 41, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4955, commandIndex: 42, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4474, commandIndex: 43, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 918, commandIndex: 44, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1748, commandIndex: 45, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 472, commandIndex: 46, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9653, commandIndex: 47, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 8637, commandIndex: 48, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7233, commandIndex: 49, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 156, commandIndex: 50, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3979, commandIndex: 51, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 8587, commandIndex: 52, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6257, commandIndex: 53, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2164, commandIndex: 54, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1812, commandIndex: 55, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6451, commandIndex: 56, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 8127, commandIndex: 57, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5938, commandIndex: 58, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4325, commandIndex: 59, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4357, commandIndex: 60, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1583, commandIndex: 61, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5271, commandIndex: 62, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5574, commandIndex: 63, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5011, commandIndex: 64, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5131, commandIndex: 65, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4568, commandIndex: 66, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7839, commandIndex: 67, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7300, commandIndex: 68, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3655, commandIndex: 69, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3017, commandIndex: 70, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 646, commandIndex: 71, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7584, commandIndex: 72, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4973, commandIndex: 73, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2179, commandIndex: 74, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6371, commandIndex: 75, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9620, commandIndex: 76, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1984, commandIndex: 77, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5276, commandIndex: 78, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 8546, commandIndex: 79, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3331, commandIndex: 80, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3032, commandIndex: 81, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5596, commandIndex: 82, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7352, commandIndex: 83, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3983, commandIndex: 84, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6603, commandIndex: 85, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1897, commandIndex: 86, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4471, commandIndex: 87, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2676, commandIndex: 88, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1076, commandIndex: 89, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 8423, commandIndex: 90, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7814, commandIndex: 91, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7385, commandIndex: 92, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7441, commandIndex: 93, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9361, commandIndex: 94, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9935, commandIndex: 95, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7543, commandIndex: 96, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9703, commandIndex: 97, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6932, commandIndex: 98, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5133, commandIndex: 99, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2815, commandIndex: 100, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7724, commandIndex: 101, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5226, commandIndex: 102, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2318, commandIndex: 103, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1524, commandIndex: 104, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5142, commandIndex: 105, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 8842, commandIndex: 106, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9470, commandIndex: 107, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6640, commandIndex: 108, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7761, commandIndex: 109, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 8159, commandIndex: 110, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4448, commandIndex: 111, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9405, commandIndex: 112, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3546, commandIndex: 113, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1366, commandIndex: 114, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9422, commandIndex: 115, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9840, commandIndex: 116, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 8288, commandIndex: 117, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4158, commandIndex: 118, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7744, commandIndex: 119, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2882, commandIndex: 120, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3150, commandIndex: 121, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2883, commandIndex: 122, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1205, commandIndex: 123, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3956, commandIndex: 124, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6073, commandIndex: 125, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9521, commandIndex: 126, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 267, commandIndex: 127, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2948, commandIndex: 128, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7370, commandIndex: 129, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7269, commandIndex: 130, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4025, commandIndex: 131, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4650, commandIndex: 132, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6860, commandIndex: 133, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7677, commandIndex: 134, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6752, commandIndex: 135, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9891, commandIndex: 136, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1271, commandIndex: 137, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4138, commandIndex: 138, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2361, commandIndex: 139, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3748, commandIndex: 140, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1407, commandIndex: 141, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2313, commandIndex: 142, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 8980, commandIndex: 143, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 839, commandIndex: 144, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1525, commandIndex: 145, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9654, commandIndex: 146, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 794, commandIndex: 147, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3736, commandIndex: 148, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3741, commandIndex: 149, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9156, commandIndex: 150, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1283, commandIndex: 151, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4629, commandIndex: 152, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9864, commandIndex: 153, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5971, commandIndex: 154, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 637, commandIndex: 155, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 8124, commandIndex: 156, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3926, commandIndex: 157, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6927, commandIndex: 158, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1628, commandIndex: 159, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 844, commandIndex: 160, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3142, commandIndex: 161, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7815, commandIndex: 162, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4197, commandIndex: 163, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4402, commandIndex: 164, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6475, commandIndex: 165, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4704, commandIndex: 166, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 530, commandIndex: 167, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3992, commandIndex: 168, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5011, commandIndex: 169, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7253, commandIndex: 170, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1399, commandIndex: 171, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6028, commandIndex: 172, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1144, commandIndex: 173, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2454, commandIndex: 174, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7052, commandIndex: 175, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6629, commandIndex: 176, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5667, commandIndex: 177, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9053, commandIndex: 178, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2845, commandIndex: 179, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9394, commandIndex: 180, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1330, commandIndex: 181, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6853, commandIndex: 182, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 741, commandIndex: 183, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4549, commandIndex: 184, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1427, commandIndex: 185, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6438, commandIndex: 186, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4364, commandIndex: 187, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5778, commandIndex: 188, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7472, commandIndex: 189, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6793, commandIndex: 190, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 8959, commandIndex: 191, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 647, commandIndex: 192, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 88, commandIndex: 193, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4668, commandIndex: 194, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 681, commandIndex: 195, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4152, commandIndex: 196, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1731, commandIndex: 197, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6787, commandIndex: 198, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 526, commandIndex: 199, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2303, commandIndex: 200, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1731, commandIndex: 201, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1499, commandIndex: 202, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6909, commandIndex: 203, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5958, commandIndex: 204, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 602, commandIndex: 205, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3435, commandIndex: 206, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4434, commandIndex: 207, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5552, commandIndex: 208, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3082, commandIndex: 209, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5164, commandIndex: 210, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 258, commandIndex: 211, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7581, commandIndex: 212, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 18, commandIndex: 213, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4797, commandIndex: 214, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9468, commandIndex: 215, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6078, commandIndex: 216, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7096, commandIndex: 217, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1331, commandIndex: 218, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3446, commandIndex: 219, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 5070, commandIndex: 220, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1885, commandIndex: 221, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9695, commandIndex: 222, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 7605, commandIndex: 223, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3585, commandIndex: 224, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 66, commandIndex: 225, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4277, commandIndex: 226, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9672, commandIndex: 227, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3456, commandIndex: 228, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 8783, commandIndex: 229, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4288, commandIndex: 230, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 4549, commandIndex: 231, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1349, commandIndex: 232, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 9769, commandIndex: 233, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 2743, commandIndex: 234, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 1201, commandIndex: 235, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3452, commandIndex: 236, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 3609, commandIndex: 237, term: 489
+2024/02/19 21:31:45 leader 1 apply command: 6306, commandIndex: 238, term: 489
+2024/02/19 21:31:45 3 reject vote to 0 because of small log
+2024/02/19 21:31:45 2 reject vote to 0 because of small log
+2024/02/19 21:31:45 1 reject vote to 0 because of small log
+2024/02/19 21:31:45 4 reject vote to 0 because of small log
+2024/02/19 21:31:45 1 reject vote to 0 because of small log
+2024/02/19 21:31:45 3 reject vote to 0 because of small log
+2024/02/19 21:31:45 1 reject vote to 0 because of small log
+2024/02/19 21:31:45 3 reject vote to 0 because of small log
+2024/02/19 21:31:45 1 reject vote to 0 because of small log
+2024/02/19 21:31:45 4 reject vote to 0 because of small log
+2024/02/19 21:31:45 2 reject vote to 0 because of small log
+2024/02/19 21:31:45 1 reject vote to 0 because of small log
+2024/02/19 21:31:45 3 reject vote to 0 because of small log
+2024/02/19 21:31:45 1 reject vote to 0 because of small log
+2024/02/19 21:31:45 2 reject vote to 0 because of small log
+2024/02/19 21:31:45 3 reject vote to 0 because of small log
+2024/02/19 21:31:45 1 reject vote to 0 because of small log
+2024/02/19 21:31:45 2 reject vote to 0 because of small log
+2024/02/19 21:31:45 1 reject vote to 0 because of small term
+2024/02/19 21:31:45 4(role: 1) vote to 1
+2024/02/19 21:31:45 0(role: 1) vote to 1
+2024/02/19 21:31:45 0 loss election because of other become leader
+2024/02/19 21:31:45 3(role: 1) vote to 1
+2024/02/19 21:31:45 2(role: 1) vote to 1
+2024/02/19 21:31:45 0(role: 1) vote to 1
+2024/02/19 21:31:45 0 loss election because of other become leader
+2024/02/19 21:31:45 2(role: 1) vote to 1
+2024/02/19 21:31:45 4(role: 1) vote to 1
+2024/02/19 21:31:45 4(role: 1) vote to 1
+2024/02/19 21:31:45 3(role: 1) vote to 1
+2024/02/19 21:31:45 2(role: 1) vote to 1
+2024/02/19 21:31:45 0(role: 1) vote to 1
+2024/02/19 21:31:45 3(role: 1) vote to 1
+2024/02/19 21:31:45 4(role: 1) vote to 1
+2024/02/19 21:31:45 4(role: 1) vote to 1
+2024/02/19 21:31:45 0(role: 1) vote to 1
+2024/02/19 21:31:45 1 win election
+2024/02/19 21:31:45 follower 4 update log, args.PrevLogIndex: 266, lenOfLog: 268
+2024/02/19 21:31:45 follower 4 args.LeaderCommit:266 > rf.commitIndex:5, lenOfLog:268
+2024/02/19 21:31:45 follower 4 apply command: 2060, commandIndex: 2, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 3164, commandIndex: 3, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 4343, commandIndex: 4, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 6555, commandIndex: 5, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 3566, commandIndex: 6, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 3587, commandIndex: 7, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 1823, commandIndex: 8, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 5703, commandIndex: 9, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 5490, commandIndex: 10, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 7092, commandIndex: 11, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 7801, commandIndex: 12, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 4733, commandIndex: 13, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 8677, commandIndex: 14, term: 291
+2024/02/19 21:31:45 follower 4 apply command: 1538, commandIndex: 15, term: 292
+2024/02/19 21:31:45 follower 4 apply command: 4356, commandIndex: 16, term: 292
+2024/02/19 21:31:45 follower 4 apply command: 466, commandIndex: 17, term: 292
+2024/02/19 21:31:45 follower 4 apply command: 9994, commandIndex: 18, term: 292
+2024/02/19 21:31:45 follower 4 apply command: 1783, commandIndex: 19, term: 292
+2024/02/19 21:31:45 follower 4 apply command: 6137, commandIndex: 20, term: 318
+2024/02/19 21:31:45 follower 4 apply command: 993, commandIndex: 21, term: 318
+2024/02/19 21:31:45 follower 4 apply command: 3852, commandIndex: 22, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6303, commandIndex: 23, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3022, commandIndex: 24, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1124, commandIndex: 25, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9199, commandIndex: 26, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1227, commandIndex: 27, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9781, commandIndex: 28, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7951, commandIndex: 29, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3247, commandIndex: 30, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 8600, commandIndex: 31, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5667, commandIndex: 32, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7324, commandIndex: 33, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6687, commandIndex: 34, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5986, commandIndex: 35, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 879, commandIndex: 36, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1201, commandIndex: 37, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2771, commandIndex: 38, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9571, commandIndex: 39, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6239, commandIndex: 40, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5608, commandIndex: 41, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4955, commandIndex: 42, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4474, commandIndex: 43, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 918, commandIndex: 44, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1748, commandIndex: 45, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 472, commandIndex: 46, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9653, commandIndex: 47, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 8637, commandIndex: 48, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7233, commandIndex: 49, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 156, commandIndex: 50, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3979, commandIndex: 51, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 8587, commandIndex: 52, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6257, commandIndex: 53, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2164, commandIndex: 54, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1812, commandIndex: 55, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6451, commandIndex: 56, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 8127, commandIndex: 57, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5938, commandIndex: 58, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4325, commandIndex: 59, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4357, commandIndex: 60, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1583, commandIndex: 61, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5271, commandIndex: 62, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5574, commandIndex: 63, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5011, commandIndex: 64, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5131, commandIndex: 65, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4568, commandIndex: 66, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7839, commandIndex: 67, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7300, commandIndex: 68, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3655, commandIndex: 69, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3017, commandIndex: 70, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 646, commandIndex: 71, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7584, commandIndex: 72, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4973, commandIndex: 73, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2179, commandIndex: 74, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6371, commandIndex: 75, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9620, commandIndex: 76, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1984, commandIndex: 77, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5276, commandIndex: 78, term: 320
+2024/02/19 21:31:45 2(role: 1) vote to 1
+2024/02/19 21:31:45 follower 4 apply command: 8546, commandIndex: 79, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3331, commandIndex: 80, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3032, commandIndex: 81, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5596, commandIndex: 82, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7352, commandIndex: 83, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3983, commandIndex: 84, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6603, commandIndex: 85, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1897, commandIndex: 86, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4471, commandIndex: 87, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2676, commandIndex: 88, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1076, commandIndex: 89, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 8423, commandIndex: 90, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7814, commandIndex: 91, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7385, commandIndex: 92, term: 320
+2024/02/19 21:31:45 follower 3 update log, args.PrevLogIndex: 266, lenOfLog: 268
+2024/02/19 21:31:45 follower 3 args.LeaderCommit:266 > rf.commitIndex:5, lenOfLog:268
+2024/02/19 21:31:45 follower 4 apply command: 7441, commandIndex: 93, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9361, commandIndex: 94, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2060, commandIndex: 2, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 9935, commandIndex: 95, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3164, commandIndex: 3, term: 38
+2024/02/19 21:31:45 follower 3 apply command: 4343, commandIndex: 4, term: 38
+2024/02/19 21:31:45 follower 3 apply command: 6555, commandIndex: 5, term: 38
+2024/02/19 21:31:45 follower 3 apply command: 3566, commandIndex: 6, term: 38
+2024/02/19 21:31:45 follower 3 apply command: 3587, commandIndex: 7, term: 38
+2024/02/19 21:31:45 follower 3 apply command: 1823, commandIndex: 8, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 7543, commandIndex: 96, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5703, commandIndex: 9, term: 38
+2024/02/19 21:31:45 follower 3 apply command: 5490, commandIndex: 10, term: 38
+2024/02/19 21:31:45 follower 4 apply command: 9703, commandIndex: 97, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7092, commandIndex: 11, term: 38
+2024/02/19 21:31:45 follower 3 apply command: 7801, commandIndex: 12, term: 38
+2024/02/19 21:31:45 follower 3 apply command: 4733, commandIndex: 13, term: 38
+2024/02/19 21:31:45 follower 3 apply command: 8677, commandIndex: 14, term: 291
+2024/02/19 21:31:45 follower 3 apply command: 1538, commandIndex: 15, term: 292
+2024/02/19 21:31:45 follower 3 apply command: 4356, commandIndex: 16, term: 292
+2024/02/19 21:31:45 follower 3 apply command: 466, commandIndex: 17, term: 292
+2024/02/19 21:31:45 follower 3 apply command: 9994, commandIndex: 18, term: 292
+2024/02/19 21:31:45 follower 3 apply command: 1783, commandIndex: 19, term: 292
+2024/02/19 21:31:45 follower 3 apply command: 6137, commandIndex: 20, term: 318
+2024/02/19 21:31:45 follower 4 apply command: 6932, commandIndex: 98, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5133, commandIndex: 99, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 993, commandIndex: 21, term: 318
+2024/02/19 21:31:45 follower 3 apply command: 3852, commandIndex: 22, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2815, commandIndex: 100, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7724, commandIndex: 101, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6303, commandIndex: 23, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3022, commandIndex: 24, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5226, commandIndex: 102, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1124, commandIndex: 25, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2318, commandIndex: 103, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1524, commandIndex: 104, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9199, commandIndex: 26, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1227, commandIndex: 27, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5142, commandIndex: 105, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 8842, commandIndex: 106, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9781, commandIndex: 28, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7951, commandIndex: 29, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9470, commandIndex: 107, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6640, commandIndex: 108, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3247, commandIndex: 30, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7761, commandIndex: 109, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 8159, commandIndex: 110, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 8600, commandIndex: 31, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4448, commandIndex: 111, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9405, commandIndex: 112, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3546, commandIndex: 113, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1366, commandIndex: 114, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9422, commandIndex: 115, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9840, commandIndex: 116, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 8288, commandIndex: 117, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4158, commandIndex: 118, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5667, commandIndex: 32, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7324, commandIndex: 33, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6687, commandIndex: 34, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5986, commandIndex: 35, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 879, commandIndex: 36, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1201, commandIndex: 37, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2771, commandIndex: 38, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7744, commandIndex: 119, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2882, commandIndex: 120, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9571, commandIndex: 39, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3150, commandIndex: 121, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2883, commandIndex: 122, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1205, commandIndex: 123, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3956, commandIndex: 124, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6073, commandIndex: 125, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9521, commandIndex: 126, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 267, commandIndex: 127, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2948, commandIndex: 128, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7370, commandIndex: 129, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6239, commandIndex: 40, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5608, commandIndex: 41, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7269, commandIndex: 130, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4955, commandIndex: 42, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4474, commandIndex: 43, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4025, commandIndex: 131, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 918, commandIndex: 44, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1748, commandIndex: 45, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 472, commandIndex: 46, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9653, commandIndex: 47, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 8637, commandIndex: 48, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7233, commandIndex: 49, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 156, commandIndex: 50, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3979, commandIndex: 51, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 8587, commandIndex: 52, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4650, commandIndex: 132, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6860, commandIndex: 133, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6257, commandIndex: 53, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2164, commandIndex: 54, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7677, commandIndex: 134, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1812, commandIndex: 55, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6451, commandIndex: 56, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 8127, commandIndex: 57, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5938, commandIndex: 58, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6752, commandIndex: 135, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4325, commandIndex: 59, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4357, commandIndex: 60, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9891, commandIndex: 136, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1271, commandIndex: 137, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1583, commandIndex: 61, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5271, commandIndex: 62, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4138, commandIndex: 138, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2361, commandIndex: 139, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5574, commandIndex: 63, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3748, commandIndex: 140, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1407, commandIndex: 141, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5011, commandIndex: 64, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5131, commandIndex: 65, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2313, commandIndex: 142, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4568, commandIndex: 66, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7839, commandIndex: 67, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 8980, commandIndex: 143, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7300, commandIndex: 68, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 839, commandIndex: 144, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1525, commandIndex: 145, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9654, commandIndex: 146, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 794, commandIndex: 147, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3736, commandIndex: 148, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3741, commandIndex: 149, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9156, commandIndex: 150, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1283, commandIndex: 151, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4629, commandIndex: 152, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9864, commandIndex: 153, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3655, commandIndex: 69, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5971, commandIndex: 154, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 637, commandIndex: 155, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3017, commandIndex: 70, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 8124, commandIndex: 156, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 646, commandIndex: 71, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3926, commandIndex: 157, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6927, commandIndex: 158, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1628, commandIndex: 159, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 844, commandIndex: 160, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3142, commandIndex: 161, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7815, commandIndex: 162, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4197, commandIndex: 163, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4402, commandIndex: 164, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6475, commandIndex: 165, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4704, commandIndex: 166, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7584, commandIndex: 72, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 530, commandIndex: 167, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3992, commandIndex: 168, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5011, commandIndex: 169, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7253, commandIndex: 170, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1399, commandIndex: 171, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6028, commandIndex: 172, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1144, commandIndex: 173, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2454, commandIndex: 174, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4973, commandIndex: 73, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7052, commandIndex: 175, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6629, commandIndex: 176, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2179, commandIndex: 74, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5667, commandIndex: 177, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9053, commandIndex: 178, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6371, commandIndex: 75, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2845, commandIndex: 179, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9394, commandIndex: 180, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9620, commandIndex: 76, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1984, commandIndex: 77, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1330, commandIndex: 181, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5276, commandIndex: 78, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 8546, commandIndex: 79, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6853, commandIndex: 182, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3331, commandIndex: 80, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3032, commandIndex: 81, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5596, commandIndex: 82, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7352, commandIndex: 83, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3983, commandIndex: 84, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6603, commandIndex: 85, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1897, commandIndex: 86, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4471, commandIndex: 87, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2676, commandIndex: 88, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1076, commandIndex: 89, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 8423, commandIndex: 90, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 741, commandIndex: 183, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4549, commandIndex: 184, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7814, commandIndex: 91, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1427, commandIndex: 185, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6438, commandIndex: 186, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4364, commandIndex: 187, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5778, commandIndex: 188, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7472, commandIndex: 189, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6793, commandIndex: 190, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 8959, commandIndex: 191, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 647, commandIndex: 192, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 88, commandIndex: 193, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7385, commandIndex: 92, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7441, commandIndex: 93, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4668, commandIndex: 194, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9361, commandIndex: 94, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9935, commandIndex: 95, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7543, commandIndex: 96, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9703, commandIndex: 97, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6932, commandIndex: 98, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5133, commandIndex: 99, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2815, commandIndex: 100, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7724, commandIndex: 101, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 681, commandIndex: 195, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5226, commandIndex: 102, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2318, commandIndex: 103, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4152, commandIndex: 196, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1524, commandIndex: 104, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5142, commandIndex: 105, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1731, commandIndex: 197, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6787, commandIndex: 198, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 8842, commandIndex: 106, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 526, commandIndex: 199, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2303, commandIndex: 200, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1731, commandIndex: 201, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1499, commandIndex: 202, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6909, commandIndex: 203, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5958, commandIndex: 204, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9470, commandIndex: 107, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 602, commandIndex: 205, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3435, commandIndex: 206, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4434, commandIndex: 207, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5552, commandIndex: 208, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3082, commandIndex: 209, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5164, commandIndex: 210, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6640, commandIndex: 108, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 258, commandIndex: 211, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7761, commandIndex: 109, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 8159, commandIndex: 110, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4448, commandIndex: 111, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9405, commandIndex: 112, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3546, commandIndex: 113, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1366, commandIndex: 114, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9422, commandIndex: 115, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9840, commandIndex: 116, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7581, commandIndex: 212, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 8288, commandIndex: 117, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4158, commandIndex: 118, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 18, commandIndex: 213, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7744, commandIndex: 119, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2882, commandIndex: 120, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4797, commandIndex: 214, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3150, commandIndex: 121, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2883, commandIndex: 122, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1205, commandIndex: 123, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3956, commandIndex: 124, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6073, commandIndex: 125, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9521, commandIndex: 126, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 267, commandIndex: 127, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9468, commandIndex: 215, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6078, commandIndex: 216, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2948, commandIndex: 128, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7096, commandIndex: 217, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1331, commandIndex: 218, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7370, commandIndex: 129, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3446, commandIndex: 219, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7269, commandIndex: 130, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4025, commandIndex: 131, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 5070, commandIndex: 220, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4650, commandIndex: 132, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6860, commandIndex: 133, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7677, commandIndex: 134, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6752, commandIndex: 135, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1885, commandIndex: 221, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9891, commandIndex: 136, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1271, commandIndex: 137, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9695, commandIndex: 222, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4138, commandIndex: 138, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2361, commandIndex: 139, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3748, commandIndex: 140, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1407, commandIndex: 141, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2313, commandIndex: 142, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 8980, commandIndex: 143, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 839, commandIndex: 144, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1525, commandIndex: 145, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 7605, commandIndex: 223, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9654, commandIndex: 146, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 794, commandIndex: 147, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3585, commandIndex: 224, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3736, commandIndex: 148, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3741, commandIndex: 149, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 66, commandIndex: 225, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9156, commandIndex: 150, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1283, commandIndex: 151, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4629, commandIndex: 152, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9864, commandIndex: 153, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5971, commandIndex: 154, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 637, commandIndex: 155, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4277, commandIndex: 226, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 8124, commandIndex: 156, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3926, commandIndex: 157, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9672, commandIndex: 227, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6927, commandIndex: 158, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1628, commandIndex: 159, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 844, commandIndex: 160, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3142, commandIndex: 161, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7815, commandIndex: 162, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4197, commandIndex: 163, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4402, commandIndex: 164, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6475, commandIndex: 165, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4704, commandIndex: 166, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 530, commandIndex: 167, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3992, commandIndex: 168, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5011, commandIndex: 169, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7253, commandIndex: 170, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1399, commandIndex: 171, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3456, commandIndex: 228, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 8783, commandIndex: 229, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6028, commandIndex: 172, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4288, commandIndex: 230, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 4549, commandIndex: 231, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1349, commandIndex: 232, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 9769, commandIndex: 233, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1144, commandIndex: 173, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2454, commandIndex: 174, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 2743, commandIndex: 234, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 1201, commandIndex: 235, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3452, commandIndex: 236, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 3609, commandIndex: 237, term: 320
+2024/02/19 21:31:45 follower 4 apply command: 6306, commandIndex: 238, term: 484
+2024/02/19 21:31:45 follower 3 apply command: 7052, commandIndex: 175, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6629, commandIndex: 176, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5667, commandIndex: 177, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9053, commandIndex: 178, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2845, commandIndex: 179, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9394, commandIndex: 180, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1330, commandIndex: 181, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6853, commandIndex: 182, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 741, commandIndex: 183, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4549, commandIndex: 184, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1427, commandIndex: 185, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6438, commandIndex: 186, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4364, commandIndex: 187, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5778, commandIndex: 188, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7472, commandIndex: 189, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6793, commandIndex: 190, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 8959, commandIndex: 191, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 647, commandIndex: 192, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 88, commandIndex: 193, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4668, commandIndex: 194, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 681, commandIndex: 195, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4152, commandIndex: 196, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1731, commandIndex: 197, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6787, commandIndex: 198, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 526, commandIndex: 199, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2303, commandIndex: 200, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1731, commandIndex: 201, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1499, commandIndex: 202, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6909, commandIndex: 203, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5958, commandIndex: 204, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 602, commandIndex: 205, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3435, commandIndex: 206, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4434, commandIndex: 207, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5552, commandIndex: 208, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3082, commandIndex: 209, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5164, commandIndex: 210, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 258, commandIndex: 211, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7581, commandIndex: 212, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 18, commandIndex: 213, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4797, commandIndex: 214, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9468, commandIndex: 215, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6078, commandIndex: 216, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7096, commandIndex: 217, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1331, commandIndex: 218, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3446, commandIndex: 219, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 5070, commandIndex: 220, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1885, commandIndex: 221, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9695, commandIndex: 222, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 7605, commandIndex: 223, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3585, commandIndex: 224, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 66, commandIndex: 225, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4277, commandIndex: 226, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9672, commandIndex: 227, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3456, commandIndex: 228, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 8783, commandIndex: 229, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4288, commandIndex: 230, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 4549, commandIndex: 231, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1349, commandIndex: 232, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 9769, commandIndex: 233, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 2743, commandIndex: 234, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 1201, commandIndex: 235, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3452, commandIndex: 236, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 3609, commandIndex: 237, term: 320
+2024/02/19 21:31:45 follower 3 apply command: 6306, commandIndex: 238, term: 484
+2024/02/19 21:31:46 follower 3 update log, args.PrevLogIndex: 266, lenOfLog: 269
+2024/02/19 21:31:46 follower 4 update log, args.PrevLogIndex: 266, lenOfLog: 269
+2024/02/19 21:31:46 follower 3 update log, args.PrevLogIndex: 266, lenOfLog: 269
+2024/02/19 21:31:46 follower 3 update log, args.PrevLogIndex: 266, lenOfLog: 269
+2024/02/19 21:31:46 follower 3 update log, args.PrevLogIndex: 266, lenOfLog: 269
+2024/02/19 21:31:46 leader 1 apply command: 6306, commandIndex: 239, term: 492
+2024/02/19 21:31:46 follower 4 args.LeaderCommit:268 > rf.commitIndex:266, lenOfLog:269
+2024/02/19 21:31:46 follower 4 apply command: 6306, commandIndex: 239, term: 492
+2024/02/19 21:31:46 follower 3 args.LeaderCommit:268 > rf.commitIndex:266, lenOfLog:269
+2024/02/19 21:31:46 follower 3 apply command: 6306, commandIndex: 239, term: 492
+2024/02/19 21:31:47 follower 0 update log, args.PrevLogIndex: 39, lenOfLog: 269
+2024/02/19 21:31:47 follower 0 args.LeaderCommit:268 > rf.commitIndex:6, lenOfLog:269
+2024/02/19 21:31:47 follower 0 apply command: 2060, commandIndex: 2, term: 38
+2024/02/19 21:31:47 follower 0 apply command: 3164, commandIndex: 3, term: 38
+2024/02/19 21:31:47 follower 0 apply command: 4343, commandIndex: 4, term: 38
+2024/02/19 21:31:47 follower 0 apply command: 6555, commandIndex: 5, term: 38
+2024/02/19 21:31:47 follower 0 apply command: 3566, commandIndex: 6, term: 38
+2024/02/19 21:31:47 follower 0 apply command: 3587, commandIndex: 7, term: 38
+2024/02/19 21:31:47 follower 0 apply command: 1823, commandIndex: 8, term: 38
+2024/02/19 21:31:47 follower 0 apply command: 5703, commandIndex: 9, term: 38
+2024/02/19 21:31:47 follower 0 apply command: 5490, commandIndex: 10, term: 38
+2024/02/19 21:31:47 follower 0 apply command: 7092, commandIndex: 11, term: 38
+2024/02/19 21:31:47 follower 0 apply command: 7801, commandIndex: 12, term: 38
+2024/02/19 21:31:47 follower 0 apply command: 4733, commandIndex: 13, term: 38
+2024/02/19 21:31:47 follower 0 apply command: 8677, commandIndex: 14, term: 291
+2024/02/19 21:31:47 follower 0 apply command: 1538, commandIndex: 15, term: 292
+2024/02/19 21:31:47 follower 0 apply command: 4356, commandIndex: 16, term: 292
+2024/02/19 21:31:47 follower 0 apply command: 466, commandIndex: 17, term: 292
+2024/02/19 21:31:47 follower 0 apply command: 9994, commandIndex: 18, term: 292
+2024/02/19 21:31:47 follower 0 apply command: 1783, commandIndex: 19, term: 292
+2024/02/19 21:31:47 follower 0 apply command: 6137, commandIndex: 20, term: 318
+2024/02/19 21:31:47 follower 0 apply command: 993, commandIndex: 21, term: 318
+2024/02/19 21:31:47 follower 0 apply command: 3852, commandIndex: 22, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6303, commandIndex: 23, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3022, commandIndex: 24, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1124, commandIndex: 25, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9199, commandIndex: 26, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1227, commandIndex: 27, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9781, commandIndex: 28, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7951, commandIndex: 29, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3247, commandIndex: 30, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 8600, commandIndex: 31, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5667, commandIndex: 32, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7324, commandIndex: 33, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6687, commandIndex: 34, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5986, commandIndex: 35, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 879, commandIndex: 36, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1201, commandIndex: 37, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2771, commandIndex: 38, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9571, commandIndex: 39, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6239, commandIndex: 40, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5608, commandIndex: 41, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4955, commandIndex: 42, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4474, commandIndex: 43, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 918, commandIndex: 44, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1748, commandIndex: 45, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 472, commandIndex: 46, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9653, commandIndex: 47, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 8637, commandIndex: 48, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7233, commandIndex: 49, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 156, commandIndex: 50, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3979, commandIndex: 51, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 8587, commandIndex: 52, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6257, commandIndex: 53, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2164, commandIndex: 54, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1812, commandIndex: 55, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6451, commandIndex: 56, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 8127, commandIndex: 57, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5938, commandIndex: 58, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4325, commandIndex: 59, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4357, commandIndex: 60, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1583, commandIndex: 61, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5271, commandIndex: 62, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5574, commandIndex: 63, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5011, commandIndex: 64, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5131, commandIndex: 65, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4568, commandIndex: 66, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7839, commandIndex: 67, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7300, commandIndex: 68, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3655, commandIndex: 69, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3017, commandIndex: 70, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 646, commandIndex: 71, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7584, commandIndex: 72, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4973, commandIndex: 73, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2179, commandIndex: 74, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6371, commandIndex: 75, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9620, commandIndex: 76, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1984, commandIndex: 77, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5276, commandIndex: 78, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 8546, commandIndex: 79, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3331, commandIndex: 80, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3032, commandIndex: 81, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5596, commandIndex: 82, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7352, commandIndex: 83, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3983, commandIndex: 84, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6603, commandIndex: 85, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1897, commandIndex: 86, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4471, commandIndex: 87, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2676, commandIndex: 88, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1076, commandIndex: 89, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 8423, commandIndex: 90, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7814, commandIndex: 91, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7385, commandIndex: 92, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7441, commandIndex: 93, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9361, commandIndex: 94, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9935, commandIndex: 95, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7543, commandIndex: 96, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9703, commandIndex: 97, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6932, commandIndex: 98, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5133, commandIndex: 99, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2815, commandIndex: 100, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7724, commandIndex: 101, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5226, commandIndex: 102, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2318, commandIndex: 103, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1524, commandIndex: 104, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5142, commandIndex: 105, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 8842, commandIndex: 106, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9470, commandIndex: 107, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6640, commandIndex: 108, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7761, commandIndex: 109, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 8159, commandIndex: 110, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4448, commandIndex: 111, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9405, commandIndex: 112, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3546, commandIndex: 113, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1366, commandIndex: 114, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9422, commandIndex: 115, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9840, commandIndex: 116, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 8288, commandIndex: 117, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4158, commandIndex: 118, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7744, commandIndex: 119, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2882, commandIndex: 120, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3150, commandIndex: 121, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2883, commandIndex: 122, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1205, commandIndex: 123, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3956, commandIndex: 124, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6073, commandIndex: 125, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9521, commandIndex: 126, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 267, commandIndex: 127, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2948, commandIndex: 128, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7370, commandIndex: 129, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7269, commandIndex: 130, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4025, commandIndex: 131, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4650, commandIndex: 132, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6860, commandIndex: 133, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7677, commandIndex: 134, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6752, commandIndex: 135, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9891, commandIndex: 136, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1271, commandIndex: 137, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4138, commandIndex: 138, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2361, commandIndex: 139, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3748, commandIndex: 140, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1407, commandIndex: 141, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2313, commandIndex: 142, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 8980, commandIndex: 143, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 839, commandIndex: 144, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1525, commandIndex: 145, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9654, commandIndex: 146, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 794, commandIndex: 147, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3736, commandIndex: 148, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3741, commandIndex: 149, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9156, commandIndex: 150, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1283, commandIndex: 151, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4629, commandIndex: 152, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9864, commandIndex: 153, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5971, commandIndex: 154, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 637, commandIndex: 155, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 8124, commandIndex: 156, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3926, commandIndex: 157, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6927, commandIndex: 158, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1628, commandIndex: 159, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 844, commandIndex: 160, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3142, commandIndex: 161, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7815, commandIndex: 162, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4197, commandIndex: 163, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4402, commandIndex: 164, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6475, commandIndex: 165, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4704, commandIndex: 166, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 530, commandIndex: 167, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3992, commandIndex: 168, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5011, commandIndex: 169, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7253, commandIndex: 170, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1399, commandIndex: 171, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6028, commandIndex: 172, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1144, commandIndex: 173, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2454, commandIndex: 174, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7052, commandIndex: 175, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6629, commandIndex: 176, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5667, commandIndex: 177, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9053, commandIndex: 178, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2845, commandIndex: 179, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9394, commandIndex: 180, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1330, commandIndex: 181, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6853, commandIndex: 182, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 741, commandIndex: 183, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4549, commandIndex: 184, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1427, commandIndex: 185, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6438, commandIndex: 186, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4364, commandIndex: 187, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5778, commandIndex: 188, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7472, commandIndex: 189, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6793, commandIndex: 190, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 8959, commandIndex: 191, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 647, commandIndex: 192, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 88, commandIndex: 193, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4668, commandIndex: 194, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 681, commandIndex: 195, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4152, commandIndex: 196, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1731, commandIndex: 197, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6787, commandIndex: 198, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 526, commandIndex: 199, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2303, commandIndex: 200, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1731, commandIndex: 201, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1499, commandIndex: 202, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6909, commandIndex: 203, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5958, commandIndex: 204, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 602, commandIndex: 205, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3435, commandIndex: 206, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4434, commandIndex: 207, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5552, commandIndex: 208, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3082, commandIndex: 209, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5164, commandIndex: 210, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 258, commandIndex: 211, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7581, commandIndex: 212, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 18, commandIndex: 213, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4797, commandIndex: 214, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9468, commandIndex: 215, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6078, commandIndex: 216, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7096, commandIndex: 217, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1331, commandIndex: 218, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3446, commandIndex: 219, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 5070, commandIndex: 220, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1885, commandIndex: 221, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9695, commandIndex: 222, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 7605, commandIndex: 223, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3585, commandIndex: 224, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 66, commandIndex: 225, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4277, commandIndex: 226, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9672, commandIndex: 227, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3456, commandIndex: 228, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 8783, commandIndex: 229, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4288, commandIndex: 230, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 4549, commandIndex: 231, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1349, commandIndex: 232, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 9769, commandIndex: 233, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 2743, commandIndex: 234, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 1201, commandIndex: 235, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3452, commandIndex: 236, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 3609, commandIndex: 237, term: 320
+2024/02/19 21:31:47 follower 0 apply command: 6306, commandIndex: 238, term: 484
+2024/02/19 21:31:47 follower 0 apply command: 6306, commandIndex: 239, term: 492
+2024/02/19 21:31:48 follower 3 update log, args.PrevLogIndex: 268, lenOfLog: 270
+2024/02/19 21:31:48 follower 4 update log, args.PrevLogIndex: 268, lenOfLog: 270
+2024/02/19 21:31:48 follower 0 update log, args.PrevLogIndex: 268, lenOfLog: 270
+2024/02/19 21:31:48 follower 3 update log, args.PrevLogIndex: 268, lenOfLog: 270
+2024/02/19 21:31:48 follower 0 update log, args.PrevLogIndex: 268, lenOfLog: 270
+2024/02/19 21:31:48 follower 3 update log, args.PrevLogIndex: 268, lenOfLog: 270
+2024/02/19 21:31:48 leader 1 apply command: 6306, commandIndex: 240, term: 492
+2024/02/19 21:31:48 follower 0 update log, args.PrevLogIndex: 268, lenOfLog: 270
+2024/02/19 21:31:48 follower 4 args.LeaderCommit:269 > rf.commitIndex:268, lenOfLog:270
+2024/02/19 21:31:48 follower 4 apply command: 6306, commandIndex: 240, term: 492
+2024/02/19 21:31:48 follower 3 args.LeaderCommit:269 > rf.commitIndex:268, lenOfLog:270
+2024/02/19 21:31:48 follower 3 apply command: 6306, commandIndex: 240, term: 492
+2024/02/19 21:31:48 follower 0 update log, args.PrevLogIndex: 268, lenOfLog: 270
+2024/02/19 21:31:48 follower 0 args.LeaderCommit:269 > rf.commitIndex:268, lenOfLog:270
+2024/02/19 21:31:48 follower 0 apply command: 6306, commandIndex: 240, term: 492
+2024/02/19 21:31:50 follower 0 update log, args.PrevLogIndex: 269, lenOfLog: 271
+2024/02/19 21:31:50 follower 4 update log, args.PrevLogIndex: 269, lenOfLog: 271
+2024/02/19 21:31:50 follower 3 update log, args.PrevLogIndex: 269, lenOfLog: 271
+2024/02/19 21:31:50 leader 1 apply command: 6306, commandIndex: 241, term: 492
+2024/02/19 21:31:50 follower 0 update log, args.PrevLogIndex: 269, lenOfLog: 271
+2024/02/19 21:31:50 follower 0 args.LeaderCommit:270 > rf.commitIndex:269, lenOfLog:271
+2024/02/19 21:31:50 follower 0 apply command: 6306, commandIndex: 241, term: 492
+2024/02/19 21:31:50 follower 4 args.LeaderCommit:270 > rf.commitIndex:269, lenOfLog:271
+2024/02/19 21:31:50 follower 4 apply command: 6306, commandIndex: 241, term: 492
+2024/02/19 21:31:50 follower 3 args.LeaderCommit:270 > rf.commitIndex:269, lenOfLog:271
+2024/02/19 21:31:50 follower 3 apply command: 6306, commandIndex: 241, term: 492
+2024/02/19 21:31:50 follower 0 update log, args.PrevLogIndex: 269, lenOfLog: 271
+--- FAIL: TestFigure8Unreliable2C (39.88s)
+    config.go:476: one(6306) failed to reach agreement
+FAIL
+exit status 1
+FAIL	raft	39.879s
