@@ -18,7 +18,10 @@ package raft
 //
 
 import (
+	"bytes"
 	"context"
+	"fmt"
+	"labgob"
 	"labrpc"
 	"sync"
 	"sync/atomic"
@@ -179,6 +182,24 @@ func (rf *Raft) persist() {
 	// e.Encode(rf.yyy)
 	// data := w.Bytes()
 	// rf.persister.SaveRaftState(data)
+
+	// 持久化一些变量
+	w := new(bytes.Buffer)
+	e := labgob.NewEncoder(w)
+	if err := e.Encode(rf.currentTerm); err != nil {
+		fmt.Println(err)
+	}
+	if err := e.Encode(rf.votedFor); err != nil {
+		fmt.Println(err)
+	}
+	if err := e.Encode(rf.logs); err != nil {
+		fmt.Println(err)
+	}
+
+	data := w.Bytes()
+
+	rf.persister.SaveRaftState(data)
+	// fmt.Println("encode success")
 }
 
 // restore previously persisted state.
@@ -199,6 +220,25 @@ func (rf *Raft) readPersist(data []byte) {
 	//   rf.xxx = xxx
 	//   rf.yyy = yyy
 	// }
+
+	// 读取一些变量
+	r := bytes.NewBuffer(data)
+	d := labgob.NewDecoder(r)
+	var currentTerm int
+	var votedFor int
+	var logs []*LogEntry
+	if err := d.Decode(&currentTerm); err != nil {
+		fmt.Printf("decode failed from readPersist(): currentTerm. err: %v\n", err)
+	} else if err := d.Decode(&votedFor); err != nil {
+		fmt.Printf("decode failed from readPersist(): votedFor. err: %v\n", err)
+	} else if err := d.Decode(&logs); err != nil {
+		fmt.Printf("decode failed from readPersist(): logs. err: %v\n", err)
+	} else {
+		rf.currentTerm = currentTerm
+		rf.votedFor = votedFor
+		rf.logs = logs
+		// fmt.Printf("decode successed from readPersist()\n")
+	}
 }
 
 // example RequestVote RPC arguments structure.
@@ -229,6 +269,8 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	if args.CandicateTerm > rf.currentTerm {
 		rf.becomeFollower(args.CandicateTerm)
 		// fmt.Printf("%d find high candicate, become follower\n", rf.me)
+		// 保存持久化变量
+		rf.persist()
 	}
 	curRole := rf.role
 	curTerm := rf.currentTerm
@@ -263,6 +305,8 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 			rf.votedFor = args.CandicateId
 			reply.VoteGranted = true
 			rf.heartBeatCh <- true // 作出选举, 重置超时
+			// 保存持久化变量
+			rf.persist()
 			// fmt.Printf("%d(role: %d) vote to %d\n", rf.me, rf.role, args.CandicateId)
 		}
 		rf.mu.Unlock()
@@ -273,7 +317,8 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 		// fmt.Printf("%d reject vote to %d because of as leader\n", rf.me, args.CandicateId)
 	}
 
-	return
+	// return
+
 }
 
 // example code to send a RequestVote RPC to a server.
@@ -348,6 +393,12 @@ type AppendEntriesArgs struct {
 type AppendEntriesReply struct {
 	FollowerTerm int  // follower 的当前 term , leader 按需要更新
 	Success      bool // true 如果 follower 包含相匹配的 PrevLogIndex 和 PrevLogTerm
+
+	// 增加三个字段用于崩溃快速恢复
+
+	Xterm  int // 发生冲突的 term (prevLogIndex 存在时非0)
+	Xindex int // Xterm 下的第一个 entry 的索引 (prevLogIndex 存在时非-1)
+	Xlen   int // 日志长度 (prevLogIndex 存在时非0)
 }
 
 // 心跳, 日志复制
@@ -362,6 +413,10 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		// if args.LeaderTerm > rf.currentTerm {
 		// 	fmt.Printf("%d find high term leader become follower\n", rf.me)
 		// }
+		// 保存持久化变量
+		if args.LeaderTerm > rf.currentTerm {
+			rf.persist()
+		}
 		reply.FollowerTerm = rf.currentTerm
 		reply.Success = true
 	} else {
@@ -384,7 +439,6 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 
 	// fmt.Printf("follower %d recv heartbeat from leader %d, entries: %v, lenOfEntries: %d, leadercommitIndex: %d\n", rf.me, args.LeaderId, args.Entries, len(args.Entries), args.LeaderCommit)
 
-	// TODO: 日志复制
 	// 检查日志是否冲突
 	if args.Entries != nil {
 		// fmt.Printf("not nil\n")
@@ -397,17 +451,31 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 				rf.logs = rf.logs[:args.PrevLogIndex+1]
 				rf.logs = append(rf.logs, args.Entries...)
 				reply.Success = true
+				// 保存持久化变量
+				rf.persist()
 				// fmt.Printf("follower %d update log, lenOfLog: %d\n", rf.me, len(rf.logs))
 			} else {
-				// term 不相同, 删除该entry后的所有日志(保留args.PrevLogIndex以前的日志)
-				rf.logs = rf.logs[:args.PrevLogIndex]
+				// term 不相同
 				reply.Success = false
+				reply.Xterm = rf.logs[args.PrevLogIndex].LogTerm // 冲突日志的 Logterm
+				for i := args.PrevLogIndex - 1; i >= 0; i-- {
+					if rf.logs[i].LogTerm != rf.logs[i+1].LogTerm {
+						reply.Xindex = i + 1 // xterm 的第一个 entry 索引
+						break
+					}
+				}
+				// 删除该entry后的所有日志(保留args.PrevLogIndex以前的日志)
+				rf.logs = rf.logs[:args.PrevLogIndex]
+				// 保存持久化变量
+				rf.persist()
 				return // 不进行更新 commitIndex, 因为日志还没有同步, 会把错误的操作更新到状态机
 			}
 		} else {
-			// 该 preLogindex 不存在, 不做处理, 返回 false
+			// 该 prevLogindex 不存在, 不做处理, 返回 false
 			reply.Success = false
-			return // 不进行更新 commitIndex, 因为日志还没有同步, 会把错误的操作更新到状态机
+			reply.Xterm = -1
+			reply.Xlen = len(rf.logs) // 日志长度
+			return                    // 不进行更新 commitIndex, 因为日志还没有同步, 会把错误的操作更新到状态机
 		}
 	}
 
@@ -432,7 +500,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		}
 	}
 
-	return
+	// return
 }
 
 func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *AppendEntriesReply) bool {
@@ -527,9 +595,10 @@ func (rf *Raft) StartElection() {
 						if ok {
 							break
 						}
-					} else {
-						// fmt.Printf("candicate %d requestVote to %d timeout\n", rf.me, server)
 					}
+					// else {
+					// 	// fmt.Printf("candicate %d requestVote to %d timeout\n", rf.me, server)
+					// }
 				}
 
 				voteCh <- reply
@@ -556,6 +625,7 @@ func (rf *Raft) StartElection() {
 						rf.mu.Lock()
 						rf.becomeLeader()
 						rf.mu.Unlock()
+						rf.persist()
 						// fmt.Printf("%d win election\n", rf.me)
 						return
 					}
@@ -565,6 +635,7 @@ func (rf *Raft) StartElection() {
 						rf.mu.Lock()
 						rf.becomeFollower(reply.FollowerTerm)
 						rf.mu.Unlock()
+						rf.persist()
 						// fmt.Printf("%d loss election because of other has high term, become follower\n", rf.me)
 						return // 停止选举
 					}
@@ -622,8 +693,7 @@ func (rf *Raft) TimeOutToElection() {
 	}
 }
 
-// heatBeat 线程
-// TODO: 修改检查索引
+// HeartBeatToServer 线程
 func (rf *Raft) HeartBeatToServer(peerIndex int) {
 	for {
 		if rf.killed() {
@@ -724,17 +794,45 @@ func (rf *Raft) HeartBeatToServer(peerIndex int) {
 						rf.mu.Lock()
 						rf.becomeFollower(reply.FollowerTerm)
 						rf.mu.Unlock()
+						// 保存持久化变量
+						rf.persist()
 						// fmt.Printf("leader %d find high term, become follower\n", rf.me)
 						break // 跳出循环不再发送 heartbeat
 					} else {
 						// 日志冲突导致的失败, 递减 nextIndex 后重试
+						// rf.mu.Lock()
+						// if rf.role != LEADER {
+						// 	rf.mu.Unlock()
+						// 	return // leader 已被弃用
+						// }
+						// rf.leaderPtr.nextIndexs[peerIndex]--
+						// rf.mu.Unlock()
+
+						// 日志冲突导致的失败, 快速定位冲突日志
 						rf.mu.Lock()
 						if rf.role != LEADER {
 							rf.mu.Unlock()
 							return // leader 已被弃用
 						}
-						rf.leaderPtr.nextIndexs[peerIndex]--
+						if reply.Xterm != -1 {
+							// 查找是否有 Xterm
+							for i := rf.logs[len(rf.logs)-1].LogIndex; i > 0; i-- {
+								if rf.logs[i].LogTerm == reply.Xterm {
+									// 存在冲突 Xterm, 直接在 冲突term开始的位置 备份
+									rf.leaderPtr.nextIndexs[peerIndex] = reply.Xindex
+									break
+								} else if rf.logs[i].LogTerm < reply.Xterm {
+									// 不存在冲突 Xterm, 直接从 (冲突term开始的位置-1) 备份
+									rf.leaderPtr.nextIndexs[peerIndex] = reply.Xindex - 1
+									break
+								}
+							}
+						} else {
+							// prevLogIndex 不存在, 直接从日志最后一个开始备份
+							rf.leaderPtr.nextIndexs[peerIndex] = rf.logs[reply.Xlen].LogIndex
+						}
 						rf.mu.Unlock()
+
 						time.Sleep(10 * time.Millisecond) // 10ms 后重试
 						continue
 					}
@@ -794,7 +892,8 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	rf.logs = append(rf.logs, newLog)
 	// fmt.Printf("start append command: %v at index: %d, commandIndex: %d\n", command, logIndex, index)
 	// rf.replicationCount[index] = 1
-
+	// 保存持久化变量
+	rf.persist()
 	return index, term, isLeader
 }
 
@@ -858,7 +957,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.role = FOLLOWER
 
 	// 选举超时相关变量
-	rf.timeOutMS = int32(300 + rf.me*100)
+	rf.timeOutMS = int32(300 + rf.me*50)
 	atomic.StoreInt32(&rf.heartBeatCnt, 0)
 	rf.quitElection = make(chan bool)
 
@@ -870,6 +969,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	go rf.TimeOutToElection()
 
 	// initialize from state persisted before a crash
+	// fmt.Printf("%d initialize\n", rf.me)
 	rf.readPersist(persister.ReadRaftState())
 
 	return rf
