@@ -158,6 +158,8 @@ func (rf *Raft) becomeLeader() {
 		IsInternalLog: true,                                 // 内部 log
 	}
 	rf.logs = append(rf.logs, noOpLog)
+	DPrintf("server %d append Command: %v, Commandindex: %d, LogIndex: %d, lenOfLog: %d, term: %d",
+		rf.me, noOpLog.Command, index, noOpLog.LogIndex, len(rf.logs), rf.currentTerm)
 
 	rf.persist()
 	// 开启 heartbeat
@@ -287,14 +289,14 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	reply.FollowerTerm = curTerm
 	if args.CandicateTerm < curTerm {
 		// 候选者任期落后, 拒绝投票
-		DPrintf("%d reject vote to %d because of small term", rf.me, args.CandicateId)
+		DPrintf("server %d reject vote to %d because of small term", rf.me, args.CandicateId)
 		return
 	}
 
 	// 选举限制(防止缺少log entry 的后选择被选择为 leader: 如果日志落后则拒绝投票)
 	if (args.LastLogTerm < lastLogTerm) || (args.LastLogTerm == lastLogTerm && args.LastLogIndex < lastLogIdx) {
 		// 日志落后, 拒绝投票
-		DPrintf("%d reject vote to %d because of small log", rf.me, args.CandicateId)
+		DPrintf("server %d reject vote to %d because of small log", rf.me, args.CandicateId)
 		return
 	}
 
@@ -308,7 +310,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 			rf.heartBeatCh <- true // 作出选举, 重置超时
 			// 保存持久化变量
 			rf.persist()
-			DPrintf("%d(role: %d) vote to %d", rf.me, rf.role, args.CandicateId)
+			DPrintf("server %d(role: %d) vote to %d", rf.me, rf.role, args.CandicateId)
 		}
 		rf.mu.Unlock()
 	case CANDICATE:
@@ -382,6 +384,7 @@ func (rf *Raft) sendRequestVoteWithTimeOut(server int, args *RequestVoteArgs, re
 // AppendEntries 请求参数
 type AppendEntriesArgs struct {
 	// TODO: 可以增加 msgType 表示该消息的类型(heartbeat, add log entries)
+
 	LeaderTerm   int        // leader 的当前任期
 	LeaderId     int        // leader 的 id
 	PrevLogIndex int        // 新日志条目的前一个日志条目的 index
@@ -443,8 +446,8 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		rf.mu.Lock()
 		if len(rf.logs)-1 >= args.PrevLogIndex {
 			// 该 preLogindex 存在, 比较 term
-			DPrintf("follower %d before update, args.PrevLogIndex: %d, Commandindex: %d, Logindex: %d, lenOfLog: %d",
-				rf.me, args.PrevLogIndex, rf.logs[args.PrevLogIndex].CommandIndex, rf.logs[args.PrevLogIndex].LogIndex, len(rf.logs))
+			// DPrintf("follower %d before update, args.PrevLogIndex: %d, Commandindex: %d, Logindex: %d, lenOfLog: %d",
+			// 	rf.me, args.PrevLogIndex, rf.logs[args.PrevLogIndex].CommandIndex, rf.logs[args.PrevLogIndex].LogIndex, len(rf.logs))
 			if rf.logs[args.PrevLogIndex].LogTerm == args.PrevLogTerm {
 				// term 也相同, 日志不冲突
 				// 更新 logs
@@ -453,20 +456,23 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 				reply.Success = true
 				// 保存持久化变量
 				rf.persist()
-				DPrintf("follower %d after update, args.PrevLogIndex: %d, Commandindex: %d, Logindex: %d, lenOfLog: %d",
-					rf.me, args.PrevLogIndex, rf.logs[len(rf.logs)-1].CommandIndex, rf.logs[len(rf.logs)-1].LogIndex, len(rf.logs))
+				DPrintf("server %d delete after index %d logs, append len: %d logs, lenOfLog: %d", rf.me, args.PrevLogIndex, len(args.Entries), len(rf.logs))
+				// DPrintf("follower %d after update, args.PrevLogIndex: %d, Commandindex: %d, Logindex: %d, lenOfLog: %d",
+				// 	rf.me, args.PrevLogIndex, rf.logs[len(rf.logs)-1].CommandIndex, rf.logs[len(rf.logs)-1].LogIndex, len(rf.logs))
 			} else {
 				// term 不相同
 				reply.Success = false
 				reply.Xterm = rf.logs[args.PrevLogIndex].LogTerm // 冲突日志的 Logterm
-				for i := args.PrevLogIndex - 1; i >= 0; i-- {
-					if rf.logs[i].LogTerm != reply.Xterm {
-						reply.Xindex = rf.logs[i+1].LogIndex // xterm 的第一个 entry 索引
+				for i := 1; i <= args.PrevLogIndex; i++ {
+					if rf.logs[i].LogTerm == reply.Xterm {
+						// reply.Xindex = rf.logs[i+1].LogIndex // xterm 的第一个 entry 索引
+						reply.Xindex = i // xterm 的第一个 entry 索引
 						break
 					}
 				}
 				// 删除该entry后的所有日志(保留args.PrevLogIndex以前的日志)
 				rf.logs = rf.logs[:args.PrevLogIndex]
+				DPrintf("server %d delete after index %d logs, lenOfLog: %d", rf.me, args.PrevLogIndex, len(rf.logs))
 				// 保存持久化变量
 				rf.persist()
 				rf.mu.Unlock()
@@ -485,7 +491,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 
 	// 更新 commitIndex, 并把提交应用到状态机 (日志已同步或者正常心跳(说明日志已同步)都可以进行更新)
 	if args.LeaderCommit > rf.commitIndex {
-		DPrintf("follower %d args.LeaderCommit:%d > rf.commitIndex:%d, lenOfLog:%d", rf.me, args.LeaderCommit, rf.commitIndex, len(rf.logs))
+		DPrintf("server %d args.LeaderCommit:%d > rf.commitIndex:%d, lenOfLog:%d", rf.me, args.LeaderCommit, rf.commitIndex, len(rf.logs))
 		i := rf.commitIndex + 1
 		for ; i <= args.LeaderCommit && i < len(rf.logs); i++ {
 			// DPrintf("follower %d log[%d].IsInternalLog: %v", rf.me, i, rf.logs[i].IsInternalLog)
@@ -497,7 +503,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 					CommandIndex: rf.logs[i].CommandIndex,
 				}
 				rf.applyChan <- applyMsg
-				DPrintf("follower %d apply command: %v, commandIndex: %d, logIndex: %d, term: %d",
+				DPrintf("server %d apply command: %v, commandIndex: %d, logIndex: %d, term: %d",
 					rf.me, applyMsg.Command, applyMsg.CommandIndex, rf.logs[i].LogIndex, rf.logs[i].LogTerm)
 			}
 			rf.commitIndex = i
@@ -543,7 +549,11 @@ func (rf *Raft) StartElection() {
 
 		// 更新任期和角色
 		rf.mu.Lock()
-		// DPrintf("%d(role: %d) start election", rf.me, rf.role)
+		if rf.role == LEADER {
+			rf.mu.Unlock()
+			return
+		}
+		DPrintf("server %d(role: %d) start election", rf.me, rf.role)
 		rf.currentTerm++
 		rf.role = CANDICATE
 		rf.votedFor = rf.me // 投票给自己
@@ -555,7 +565,7 @@ func (rf *Raft) StartElection() {
 		rf.mu.Unlock()
 
 		// 选举阶段超时 定时器
-		ticker := time.NewTicker(300 * time.Millisecond)
+		ticker := time.NewTicker(400 * time.Millisecond)
 		// 接受投票结果的 channel
 		voteCh := make(chan *RequestVoteReply, len(rf.peers))
 
@@ -629,7 +639,7 @@ func (rf *Raft) StartElection() {
 						rf.mu.Lock()
 						rf.becomeLeader()
 						rf.mu.Unlock()
-						DPrintf("%d win election", rf.me)
+						DPrintf("server %d win election", rf.me)
 						return
 					}
 				} else {
@@ -638,20 +648,20 @@ func (rf *Raft) StartElection() {
 						rf.mu.Lock()
 						rf.becomeFollower(reply.FollowerTerm)
 						rf.mu.Unlock()
-						// DPrintf("%d loss election because of other has high term, become follower", rf.me)
+						DPrintf("server %d loss election because of other has high term, become follower", rf.me)
 						return // 停止选举
 					}
 					// 其他情况不用处理, 继续等待接收
 				}
 
 			case <-rf.heartBeatCh:
-				// DPrintf("%d loss election because of other become leader", rf.me)
+				DPrintf("server %d loss election because of other become leader", rf.me)
 				return
 			}
 
 		}
 
-		time.Sleep(100 * time.Millisecond) // 100 ms 后开始新一轮选举
+		// time.Sleep(100 * time.Millisecond) // 100 ms 后开始新一轮选举
 		if rf.killed() {
 			// DPrintf("%d election quit because of killed", rf.me)
 			return
@@ -746,7 +756,7 @@ func (rf *Raft) HeartBeatToServer(peerIndex int) {
 						// follower 已复制了日志
 						// 更新 nextIndex 和 matIndex (只有在当前线程改变不需要持有锁)
 						rf.mu.Lock() // Lock() 防止 leaderptr 被置空
-						if rf.role != LEADER {
+						if rf.currentTerm != args.LeaderTerm {
 							rf.mu.Unlock()
 							return // leader 已被弃用
 						}
@@ -778,7 +788,7 @@ func (rf *Raft) HeartBeatToServer(peerIndex int) {
 												CommandIndex: rf.logs[k].CommandIndex,
 											}
 											rf.applyChan <- applyMsg
-											DPrintf("leader %d apply command: %v, commandIndex: %d, logIndex: %d, term: %d,",
+											DPrintf("server %d apply command: %v, commandIndex: %d, logIndex: %d, term: %d,",
 												rf.me, applyMsg.Command, applyMsg.CommandIndex, rf.logs[k].LogIndex, rf.logs[k].LogTerm)
 										}
 									}
@@ -820,7 +830,7 @@ func (rf *Raft) HeartBeatToServer(peerIndex int) {
 							for i := rf.logs[len(rf.logs)-1].LogIndex; i > 0; i-- {
 								if rf.logs[i].LogTerm == reply.Xterm {
 									// 存在冲突 Xterm, 直接在 冲突term开始的位置 备份
-									rf.leaderPtr.nextIndexs[peerIndex] = rf.logs[i].LogIndex
+									rf.leaderPtr.nextIndexs[peerIndex] = i + 1
 									break
 								} else if rf.logs[i].LogTerm < reply.Xterm {
 									// 不存在冲突 Xterm, 直接从 Xindex 备份
@@ -832,6 +842,7 @@ func (rf *Raft) HeartBeatToServer(peerIndex int) {
 							// prevLogIndex 不存在, 直接从日志最后一个开始备份
 							rf.leaderPtr.nextIndexs[peerIndex] = rf.logs[reply.Xlen].LogIndex
 						}
+						DPrintf("server %d (leader: %d) nextIndex: %d", peerIndex, rf.me, rf.leaderPtr.nextIndexs[peerIndex])
 						rf.mu.Unlock()
 
 						time.Sleep(10 * time.Millisecond) // 10ms 后重试
@@ -895,7 +906,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	// rf.replicationCount[index] = 1
 	// 保存持久化变量
 	rf.persist()
-	DPrintf("leader %d append Command: %v, Commandindex: %d, LogIndex: %d, lenOfLog: %d, term: %d",
+	DPrintf("server %d append Command: %v, Commandindex: %d, LogIndex: %d, lenOfLog: %d, term: %d",
 		rf.me, command, index, logIndex, len(rf.logs), rf.currentTerm)
 	return index, term, isLeader
 }

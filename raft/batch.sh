@@ -11,7 +11,9 @@ num_iterations=10
 
 for ((i=0; i<$num_iterations; i++)); do
     # 循环执行命令并将输出追加到日志文件
-    go test -run 2C >> log_${i}.txt
+    # go test -run 2C >> log_${i}.log
+    # go test -run TestBackup2B >> log_${i}.log
+    go test -run TestFigure8Unreliable2C >> log_${i}.log
     echo ----------------- ${i} -----------------
     sleep 1
 done

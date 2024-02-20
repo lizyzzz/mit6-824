@@ -446,6 +446,7 @@ func (cfg *config) one(cmd interface{}, expectedServers int, retry bool) int {
 				index1, _, ok := rf.Start(cmd)
 				if ok {
 					index = index1
+					DPrintf("one start cmd: %v in test", cmd)
 					break
 				}
 			}
@@ -473,6 +474,7 @@ func (cfg *config) one(cmd interface{}, expectedServers int, retry bool) int {
 			time.Sleep(50 * time.Millisecond)
 		}
 	}
+	DPrintf("one start cmd: %v in test", cmd)
 	cfg.t.Fatalf("one(%v) failed to reach agreement", cmd)
 	return -1
 }

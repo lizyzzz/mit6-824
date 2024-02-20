@@ -4,7 +4,10 @@ go 1.20
 
 require labrpc v0.0.0
 
-require labgob v0.0.0 // indirect
+require (
+	github.com/cihub/seelog v0.0.0-20170130134532-f561c5e57575 // direct
+	labgob v0.0.0 // direct
+)
 
 replace (
 	labgob => ../labgob
