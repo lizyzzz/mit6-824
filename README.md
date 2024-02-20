@@ -1,25 +1,25 @@
 # mit6-824
 mit6.824学习笔记及源码
 
-### lab
+## lab
 * lab1: MapReduce  
 * lab2: Raft for fault tolerant  
 * lab3: K/V server base Raft  
 * lab4: Sharded key value service sharding  
 
-#### 系统设计的目标
+### 系统设计的目标
 * Performance --- scalability: 扩展性  
 * Fault Tolerance --- Availability: 可用性  
 * Fault Tolerance --- Recoverability: 可恢复性  
-#### 一个常见的话题
+### 一个常见的话题
 * Consistency: 一致性  
 
-#### MapReduce  
+### MapReduce  
 * 大规模数据集（大于1TB）的并行运算
 
-### Lab1: MapReduce
+## Lab1: MapReduce
 lab1 的主要目的是实现并行计算框架 MapReduce, master 进程负责统筹 `map/reduce` 任务的执行。  
-#### Worker
+### Worker
 worker 的逻辑比较简单, 循环向 master 获取任务, 任务类型有如下三种：  
 * `休眠任务`(**NO_TASK**): 由于有些 map 任务已经被分发完，但还没有到 reduce 任务, 需要休眠一定的时间再请求任务(失败的 map 任务或 reduce任务 或 失败的 reduce 任务)  
 * `map任务`(**MAP_TASK**): map 任务即调用 `mapf` function 对文件中的内容做 key-value 的映射, 根据 key 做 hash(key) 映射到不同的目标 region, 把结果保存到不同的中间文件, 如 `mr-X-Y`, X 是文件id, Y 是 hash(key) 后的 id, 该步骤后, 把一个文件中的 key-value 通过 hash(key) 分到了不同的 region.  
@@ -105,11 +105,11 @@ func DoWork(mapf func(string, string) []KeyValue,
 	return nil
 }
 ```
-#### Master 
+### Master 
 master 负责分发任务, 并且注意当任务在规定时间内不能完成时, 需要重新恢复任务.
-#### lock-base
+### lock-base
 实现细节基于锁实现, 没有使用通道.
-#### 注意点
+### 注意点
 * 坑1: RPC 消息结构体有两个 string 对象时，只有一个 string 能正常传输
 * 坑2: linux sort 命令排序规则基于 locale, `export LC_ALL=C` 可以解决
 * 坑3: 局部作用域定义覆盖问题
@@ -138,7 +138,7 @@ if ok {
 ![image-状态转化](./images/Lab2A-1.jpg)
 * 实现逻辑及接口  
 ![image-实现逻辑](./images/Lab2A-2.jpg)
-#### Lab2A 总结
+### Lab2A 总结
 * 一个currentTerm只能voteFor其他节点1次, 在收到心跳后需要重置 voteFor 为 -1
 * 注意candidates超时选举的时间随机性, 否则不好形成多数派
 * 注意requestVote得到大多数投票后要立即结束等待剩余RPC
@@ -146,9 +146,9 @@ if ok {
 * 注意几个刷新选举超时时间的逻辑点
 
 
-### Lab2B: Log Replication  
+## Lab2B: Log Replication  
 日志复制与同步
-#### Lab2B 主要难点
+### Lab2B 主要难点
 * leader 需要维护每个follower的 nextIndexs(用于确定把哪些日志发送给follower) 和 matchIndexs(用于确定哪些日志可以被提交**commit**)  
 * 日志条目(LogEntry)结构体的定义如下, 需要额外添加`CommandIndex`和`IsInternalLog`来确定是来自外部的log还是leader在任期开始时提交的`no-op`的空白log。 而正是因为有`no-op`日志会使得`LogIndex`相对于外部日志来说不是连续的，所以要增加一个`CommandIndex`来确保外部日志的index连续性。另一方面在设计时 logs[0] 始终是哨兵日志。以确保index和数组下标相同。
 * 应用层通过 `Start(command)` 函数与raft进行交互, `Start` 在 leader 生效, 并且添加一个 log 到 logs, 返回该 log 的 `index` 和 `term` , 应用层需要接收 `applyCh` 中的 `ApplyMsg` 来确定哪些操作已经被提交了。
@@ -156,7 +156,8 @@ if ok {
 ![image-figure8](./images/Lab2B-1.jpg)  
 ![image-figure8理解](./images/Lab2B-2.jpg)  
 ![image-figure8理解延伸](./images/Lab2B-3.jpg)  
-#### Lab2B 总结
+
+### Lab2B 总结
 * `nextIndexs`是`leader`对`follower`日志同步进度的猜测，`matchIndex`则是实际获知到的同步进度，leader需要不断的appendEntries来和follower进行反复校对，直到`PrevLogIndex`、`PrevLogTerm`符合Raft约束。
 * Leader更新`commitIndex`需要计算大多数节点拥有的日志范围，就是大多数节点都拥有的日志范围，将其设置为commitIndex。**注意只能提交本任期内的日志**  
 * Follower收到appendEntries时，一定要在处理完log写入后再更新commitIndex，因为论文中要求Follower的commitIndex是min(local log index，leaderCommitIndex)。  
@@ -195,6 +196,6 @@ type AppendEntriesReply struct {
 	Xlen   int // 日志长度 (prevLogIndex 存在时非0)
 }
 ```
-#### Lab2C总结
+### Lab2C总结
 * lab2C只是在lab2B基础上，把持久化状态进行了persist存储，另外对日志同步性能提出了更高要求，因为它会制造网络分区形成2个leader然后向2个leader同时写入大量日志，造成2个很长的歧义日志，然而默认的论文实现每次回退1个下标进行重试是无法通过单测的.  
 * 仔细检查**当持久化变量发生变化的时候，在别的服务器感知之前就要做持久化**, 主要在以下几个点: (a) `start` 执行命令时; (b) `follower/candicates/leader` 转换时; (c) 在 `rpc hander` 改变状态时.  
