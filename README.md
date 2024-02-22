@@ -132,7 +132,7 @@ if ok {
 ```
 ## LAB2 主体逻辑(Figure 2)
 ![image-figure](./images/Lab2-figure2.jpg)
-### Lab2A: Leader Election And HeartBeat
+## Lab2A: Leader Election And HeartBeat
 选择leader  
 * 状态转化逻辑  
 ![image-状态转化](./images/Lab2A-1.jpg)
@@ -166,7 +166,7 @@ if ok {
 * 添加 `no-op` 空白日志, 隐式提交上一个任期的日志.
 
 
-### Lab2C: State Persistent  
+## Lab2C: State Persistent  
 当`currentTerm、voteFor、log[]`更新后，调用persist将它们持久化下来，因为这3个状态是要求持久化的。
 #### 加速备份(优化 nextIndexs)的探索  
 增加三个参数回复leader定位相同的起始点  
@@ -199,3 +199,212 @@ type AppendEntriesReply struct {
 ### Lab2C总结
 * lab2C只是在lab2B基础上，把持久化状态进行了persist存储，另外对日志同步性能提出了更高要求，因为它会制造网络分区形成2个leader然后向2个leader同时写入大量日志，造成2个很长的歧义日志，然而默认的论文实现每次回退1个下标进行重试是无法通过单测的.  
 * 仔细检查**当持久化变量发生变化的时候，在别的服务器感知之前就要做持久化**, 主要在以下几个点: (a) `start` 执行命令时; (b) `follower/candicates/leader` 转换时; (c) 在 `rpc hander` 改变状态时.  
+
+## Lab3A: Key/value Service Without Log Compaction
+### Lab3A简介
+使用 Lab2 中的 Raft 库构建容错 kv 存储服务。您的 kv 服务将是一个复制状态机，由多个使用 Raft 进行复制的 kv 服务器组成。 只要大多数服务器处于活动状态并且可以通信，无论存在其他故障或网络分区，您的 kv 服务都应该继续处理客户端请求。  
+**线性一致性的定义**：  
+* 对于单个 client 来说，发起 OP1 必须等待其结果返回，才能执行 OP2 ，必须是顺序的（上锁或者排队提交）。
+* 多个client可以并发请求。
+* 一旦有1个client读取到新值，那么后续任意client的读操作都应该返回新值。  
+### Client 客户端
+* 客户端提供 `Put(key, value)`、`Append(key, value)` 和 `Get(key)` 三种接口, 每个客户端都通过 Clerk 使用 Put/Append/Get 方法与服务端进行通信. 由于要`保证强一致性`, 即任何一次读都能读到某个数据的最近一次写的数据. 因此接口可以设计为阻塞的形式, 并`设置超时循环调用`.   
+* 另一方面为了保证操作的幂等性, 需要为每个 client 的操作提供一个独一无二的序号, 使用 `clientId + seqID` 实现.  
+* 因为 leader 会由于重新选举发生变化, 所以在rpc被拒绝时应`切换到下一个 server` 作为 leader.  
+```Go
+type Clerk struct {
+	servers []*labrpc.ClientEnd
+	// You will have to modify this struct.
+
+	mu sync.Mutex
+
+	leaderIndex int // 上一次的 leader 索引
+
+	clientId int64 // 唯一的 client id
+	seqId    int64 // 发送的操作序列号
+}
+// 其中一个接口实现
+func (ck *Clerk) PutAppend(key string, value string, op string) {
+	// You will have to modify this function.
+
+	args := PutAppendArgs{
+		Key:      key,
+		Value:    value,
+		Op:       op,
+		ClientId: ck.clientId,
+		SeqId:    atomic.AddInt64(&ck.seqId, 1), // 原子递增序列号
+	}
+
+	for {
+		reply := PutAppendReply{}
+		// 先尝试上一次的 leader
+		DPrintf("client[%d] start PutAppend key[%s]-value[%s] to server[%d], seq[%d]", ck.clientId, key, value, ck.currentLeader(), args.SeqId)
+		timeOut, ok := ck.sendPutAppendWithTimeOut(ck.currentLeader(), &args, &reply, 3000*time.Millisecond)
+
+		if timeOut {
+			// 超时
+			DPrintf("timeout")
+			continue
+		} else {
+			if ok {
+				// 收到响应
+				switch reply.Err {
+				case OK:
+					return
+				case ErrWrongLeader:
+					// 切换 leader
+					DPrintf("client[%d] PutAppend key err:%s", ck.clientId, reply.Err)
+					ck.changeLeader()
+				default:
+					DPrintf("unknow err")
+				}
+			} else {
+				// 切换 leader
+				ck.changeLeader()
+			}
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
+
+}
+```
+### Server 服务端
+* 每个 kv 服务器（“kvservers”）都会有一个关联的 Raft peer 节点。 client 将 Put()、Append() 和 Get() RPC 发送到关联 Raft 为领导者的 kvserver。   
+* kvserver代码将 Put/Append/Get 操作提交给 Raft, 以便 Raft 日志保存Put/Append/Get操作的序列。 所有kvserver按顺序执行Raft日志中的操作，将操作应用到它们的键/值数据库； 目的是让服务器维护键/值数据库的相同副本。  
+```Go
+// 循环接收 applyCh 的消息
+func (kv *KVServer) applyMsgLoop() {
+	for !kv.killed() {
+		msg := <-kv.applyCh
+		cmd := msg.Command
+		cmdIndex := msg.CommandIndex
+
+		kv.mu.Lock()
+
+		// 类型转换为操作日志
+		op := cmd.(*Op)
+
+		opCtx, existOp := kv.cmdMap[cmdIndex]
+		prevSeq, existSeq := kv.seqMap[op.ClientId]
+		kv.seqMap[op.ClientId] = op.SeqId // 接收到 msg, 说明已被提交, 更新 client 最新被提交的操作
+
+		if existOp {
+			// 存在在等待结果的 rpc, 判断状态是否与写入的时候一致
+			// 如果不一致, 说明 leader 被更换了, 该 server 不再是 leader 了
+			if op.Term != opCtx.op.Term {
+				opCtx.wrongLeader = true
+			}
+		}
+
+		// 如果是写请求, 应用状态机
+		if op.Type == OP_TYPE_PUT || op.Type == OP_TYPE_APPEND {
+			if !existSeq || op.SeqId > prevSeq {
+				// 序列号比之前的更新, 接收这个变更
+				if op.Type == OP_TYPE_PUT {
+					kv.kvStore[op.Key] = op.Value
+				} else if op.Type == OP_TYPE_APPEND {
+					if val, ok := kv.kvStore[op.Key]; ok {
+						// 已存在的 append
+						kv.kvStore[op.Key] = val + op.Value
+					} else {
+						// 不存在的 put
+						kv.kvStore[op.Key] = op.Value
+					}
+				}
+			} else if existOp {
+				// op.SeqId < prevSeq
+				// 序列号落后, 该操作被忽略
+				opCtx.ignored = true
+			}
+		} else {
+			// 读请求
+			if existOp {
+				// 如果是 wrong
+				opCtx.value, opCtx.keyExist = kv.kvStore[op.Key]
+			}
+		}
+
+		DPrintf("raft node[%d] applyMsgLoop kvStore[%v]", kv.me, kv.kvStore)
+
+		// 唤醒阻塞的 rpc
+		if existOp {
+			// 这里发送可能会没有线程接收(因为超时退出了)
+			// opCtx.commitedChan <- 1
+			// 使用 close
+			close(opCtx.commitedChan)
+		}
+
+		kv.mu.Unlock()
+	}
+}
+```
+* 如果 kvserver 不属于多数派的 leader, 则不应完成 Get() RPC（以便它不提供陈旧数据）. 一个简单的解决方案是`在 Raft 日志中记录每个 Get()`（从而确保达到多数派都有读取的 key 副本）。
+* 调用 Start() 后, kvserver 需要等待 Raft 达成一致性协议. 达成共识的命令到达 applyCh。根据 rpc 的上下文对被提交的状态应用到状态机, 并唤醒阻塞中的 rpc. 同时 rpc 需要设置唤醒超时, 防止没有收到唤醒时被阻塞.
+```Go
+// 循环接收 applyCh 的消息
+func (kv *KVServer) applyMsgLoop() {
+	for !kv.killed() {
+		msg := <-kv.applyCh
+		cmd := msg.Command
+		cmdIndex := msg.CommandIndex
+
+		kv.mu.Lock()
+
+		// 类型转换为操作日志
+		op := cmd.(*Op)
+
+		opCtx, existOp := kv.cmdMap[cmdIndex]
+		prevSeq, existSeq := kv.seqMap[op.ClientId]
+		kv.seqMap[op.ClientId] = op.SeqId // 接收到 msg, 说明已被提交, 更新 client 最新被提交的操作
+
+		if existOp {
+			// 存在在等待结果的 rpc, 判断状态是否与写入的时候一致
+			// 如果不一致, 说明 leader 被更换了, 该 server 不再是 leader 了
+			if op.Term != opCtx.op.Term {
+				opCtx.wrongLeader = true
+			}
+		}
+
+		// 如果是写请求, 应用状态机
+		if op.Type == OP_TYPE_PUT || op.Type == OP_TYPE_APPEND {
+			if !existSeq || op.SeqId > prevSeq {
+				// 序列号比之前的更新, 接收这个变更
+				if op.Type == OP_TYPE_PUT {
+					kv.kvStore[op.Key] = op.Value
+				} else if op.Type == OP_TYPE_APPEND {
+					if val, ok := kv.kvStore[op.Key]; ok {
+						// 已存在的 append
+						kv.kvStore[op.Key] = val + op.Value
+					} else {
+						// 不存在的 put
+						kv.kvStore[op.Key] = op.Value
+					}
+				}
+			} else if existOp {
+				// op.SeqId < prevSeq
+				// 序列号落后, 该操作被忽略
+				opCtx.ignored = true
+			}
+		} else {
+			// 读请求
+			if existOp {
+				// 如果是 wrong
+				opCtx.value, opCtx.keyExist = kv.kvStore[op.Key]
+			}
+		}
+
+		DPrintf("raft node[%d] applyMsgLoop kvStore[%v]", kv.me, kv.kvStore)
+
+		// 唤醒阻塞的 rpc
+		if existOp {
+			// 这里发送可能会没有线程接收(因为超时退出了)
+			// opCtx.commitedChan <- 1
+			// 使用 close
+			close(opCtx.commitedChan)
+		}
+
+		kv.mu.Unlock()
+	}
+}
+```
+
