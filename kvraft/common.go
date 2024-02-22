@@ -16,6 +16,9 @@ type PutAppendArgs struct {
 	// You'll have to add definitions here.
 	// Field names must start with capital letters,
 	// otherwise RPC will break.
+
+	ClientId int64 // 请求的 client id
+	SeqId    int64 // 请求的序列号
 }
 
 type PutAppendReply struct {
@@ -25,6 +28,9 @@ type PutAppendReply struct {
 type GetArgs struct {
 	Key string
 	// You'll have to add definitions here.
+
+	ClientId int64 // 请求的 client id
+	SeqId    int64 // 请求的序列号
 }
 
 type GetReply struct {

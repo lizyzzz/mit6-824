@@ -5,6 +5,7 @@ import (
 	"log"
 	"sync"
 	"sync/atomic"
+	"time"
 
 	"labrpc"
 	"raft"
@@ -19,10 +20,40 @@ func DPrintf(format string, a ...interface{}) (n int, err error) {
 	return
 }
 
+const (
+	OP_TYPE_GET    = "Get"
+	OP_TYPE_PUT    = "Put"
+	OP_TYPE_APPEND = "Append"
+)
+
 type Op struct {
 	// Your definitions here.
 	// Field names must start with capital letters,
 	// otherwise RPC will break.
+
+	Key   string
+	Value string
+	Type  string // 操作类型 "Put" "Append" "Get"
+
+	CmdIndex int // 写入日志的 index
+	Term     int // 写入日志的 term
+
+	ClientId int64
+	SeqId    int64
+}
+
+// 操作的上下文
+type OpContext struct {
+	op *Op
+
+	commitedChan chan int // 阻塞等待通知结果的 channel
+
+	wrongLeader bool // leader是否被更换
+	ignored     bool // seq id 已经过期, 该日志被忽略
+
+	// Get 操作的结果
+	keyExist bool
+	value    string
 }
 
 type KVServer struct {
@@ -35,14 +66,209 @@ type KVServer struct {
 	maxraftstate int // snapshot if log grows this big
 
 	// Your definitions here.
+
+	kvStore map[string]string  // 状态存储
+	cmdMap  map[int]*OpContext // commandIndex -> 请求上下文
+	seqMap  map[int64]int64    // clientId -> clientSeq(记录上次执行的操作序号, 保证幂等)
 }
 
+// Get rpc handler
 func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 	// Your code here.
+
+	reply.Err = OK
+
+	op := &Op{
+		Key:      args.Key,
+		Type:     OP_TYPE_GET,
+		ClientId: args.ClientId,
+		SeqId:    args.SeqId,
+	}
+
+	// 交给 raft 做一致性检查
+	var isLeader bool
+	op.CmdIndex, op.Term, isLeader = kv.rf.Start(op)
+
+	if !isLeader {
+		// 非leader
+		reply.Err = ErrWrongLeader
+		return
+	}
+
+	opCtx := &OpContext{
+		op:           op,
+		commitedChan: make(chan int),
+	}
+
+	// 保存上下文
+	kv.mu.Lock()
+	// 保存 rpc 上下文, 等待commit, leader 变更可能会导致上下文被覆盖, 不过被覆盖的 rpc 会因为超时退出
+	kv.cmdMap[op.CmdIndex] = opCtx
+	kv.mu.Unlock()
+
+	// 调用结束时清理内存
+	defer func() {
+		kv.mu.Lock()
+		defer kv.mu.Unlock()
+		if ctx, ok := kv.cmdMap[op.CmdIndex]; ok {
+			if ctx == opCtx {
+				delete(kv.cmdMap, op.CmdIndex)
+			}
+		}
+	}()
+
+	// 等待接收commit通知
+	ticker := time.NewTicker(2000 * time.Millisecond)
+	defer ticker.Stop()
+
+	select {
+	case <-opCtx.commitedChan:
+		// 操作被提交
+		if opCtx.wrongLeader {
+			// 相同 index 的位置, term 发生改变, 说明当前 server 已经不是 leader
+			reply.Err = ErrWrongLeader
+		} else if !opCtx.keyExist {
+			// key 不存在
+			reply.Err = ErrNoKey
+		} else {
+			// 读请求达成共识
+			reply.Value = opCtx.value
+		}
+	case <-ticker.C:
+		// 超时让 client 重试
+		reply.Err = ErrWrongLeader
+	}
+
 }
 
+// PutAppend rpc handler
 func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 	// Your code here.
+
+	reply.Err = OK
+
+	op := &Op{
+		Key:      args.Key,
+		Value:    args.Value,
+		Type:     args.Op,
+		ClientId: args.ClientId,
+		SeqId:    args.SeqId,
+	}
+
+	// 交给 raft 做一致性检查
+	var isLeader bool
+	op.CmdIndex, op.Term, isLeader = kv.rf.Start(op)
+
+	if !isLeader {
+		// 非leader
+		reply.Err = ErrWrongLeader
+		return
+	}
+
+	opCtx := &OpContext{
+		op:           op,
+		commitedChan: make(chan int),
+	}
+
+	// 保存上下文
+	kv.mu.Lock()
+	// 保存 rpc 上下文, 等待commit, leader 变更可能会导致上下文被覆盖, 不过被覆盖的 rpc 会因为超时退出
+	kv.cmdMap[op.CmdIndex] = opCtx
+	kv.mu.Unlock()
+
+	// 调用结束时清理内存
+	defer func() {
+		kv.mu.Lock()
+		defer kv.mu.Unlock()
+		if ctx, ok := kv.cmdMap[op.CmdIndex]; ok {
+			if ctx == opCtx {
+				delete(kv.cmdMap, op.CmdIndex)
+			}
+		}
+	}()
+
+	// 等待接收commit通知
+	ticker := time.NewTicker(2000 * time.Millisecond)
+	defer ticker.Stop()
+
+	select {
+	case <-opCtx.commitedChan:
+		// 操作被提交
+		if opCtx.wrongLeader {
+			// 相同 index 的位置, term 发生改变, 说明当前 server 已经不是 leader
+			reply.Err = ErrWrongLeader
+		} else if opCtx.ignored {
+			// 说明 seqId 落后了, 请求被忽略, 直接回复 OK 即可
+			break
+		}
+	case <-ticker.C:
+		// 超时让 client 重试
+		reply.Err = ErrWrongLeader
+	}
+
+}
+
+// 循环接收 applyCh 的消息
+func (kv *KVServer) applyMsgLoop() {
+	for !kv.killed() {
+		msg := <-kv.applyCh
+		cmd := msg.Command
+		cmdIndex := msg.CommandIndex
+
+		kv.mu.Lock()
+
+		// 类型转换为操作日志
+		op := cmd.(*Op)
+
+		opCtx, existOp := kv.cmdMap[cmdIndex]
+		prevSeq, existSeq := kv.seqMap[op.ClientId]
+		kv.seqMap[op.ClientId] = op.SeqId // 接收到 msg, 说明已被提交, 更新 client 最新被提交的操作
+
+		if existOp {
+			// 存在在等待结果的 rpc, 判断状态是否与写入的时候一致
+			// 如果不一致, 说明leader 被更换了, 该 server 不再是 leader 了
+			if op.Term != opCtx.op.Term {
+				opCtx.wrongLeader = true
+			}
+		}
+
+		// 如果是写请求, 应用状态机
+		if op.Type == OP_TYPE_PUT || op.Type == OP_TYPE_APPEND {
+			if !existSeq || op.SeqId > prevSeq {
+				// 序列号比之前的更新, 接收这个变更
+				if op.Type == OP_TYPE_PUT {
+					kv.kvStore[op.Key] = op.Value
+				} else if op.Type == OP_TYPE_APPEND {
+					if val, ok := kv.kvStore[op.Key]; ok {
+						// 已存在的 append
+						kv.kvStore[op.Key] = val + op.Value
+					} else {
+						// 不存在的 put
+						kv.kvStore[op.Key] = op.Value
+					}
+				}
+			} else if existOp {
+				// op.SeqId < prevSeq
+				// 序列号落后, 该操作被忽略
+				opCtx.ignored = true
+			}
+		} else {
+			// 读请求
+			if existOp {
+				// 如果是 wrong
+				opCtx.value, opCtx.keyExist = kv.kvStore[op.Key]
+			}
+		}
+
+		DPrintf("raft node[%d] applyMsgLoop kvStore[%v]", kv.me, kv.kvStore)
+
+		// 唤醒阻塞的 rpc
+		if existOp {
+			opCtx.commitedChan <- 1
+		}
+
+		kv.mu.Unlock()
+	}
 }
 
 // the tester calls Kill() when a KVServer instance won't
@@ -79,18 +305,24 @@ func (kv *KVServer) killed() bool {
 func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persister, maxraftstate int) *KVServer {
 	// call labgob.Register on structures you want
 	// Go's RPC library to marshall/unmarshall.
-	labgob.Register(Op{})
+	labgob.Register(&Op{})
 
-	kv := new(KVServer)
-	kv.me = me
-	kv.maxraftstate = maxraftstate
+	kv := &KVServer{
+		me:           me,
+		applyCh:      make(chan raft.ApplyMsg),
+		maxraftstate: maxraftstate,
+		kvStore:      make(map[string]string),
+		cmdMap:       make(map[int]*OpContext),
+		seqMap:       make(map[int64]int64),
+	}
 
 	// You may need initialization code here.
 
-	kv.applyCh = make(chan raft.ApplyMsg)
 	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
 
 	// You may need initialization code here.
+
+	go kv.applyMsgLoop()
 
 	return kv
 }

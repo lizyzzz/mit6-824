@@ -519,7 +519,7 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 	return ok
 }
 
-// 在指定时间内执行, 超时则返回 false, 第一个参数表示是否超时
+// 在指定时间内执行, 超时则返回 false, 第一个参数表示是否超时, 第二个参数表示是否收到响应
 func (rf *Raft) sendAppendEntriesWithTimeOut(server int, args *AppendEntriesArgs, reply *AppendEntriesReply, ms time.Duration) (bool, bool) {
 	ctx, cancel := context.WithTimeout(context.Background(), ms)
 	defer cancel()
@@ -694,9 +694,7 @@ func (rf *Raft) TimeOutToElection() {
 
 		case <-rf.heartBeatCh:
 			// 收到 heartbeat, 计数 +1
-			cnt := atomic.LoadInt32(&rf.heartBeatCnt)
-			cnt++
-			atomic.StoreInt32(&rf.heartBeatCnt, cnt)
+			atomic.AddInt32(&rf.heartBeatCnt, 1)
 
 		case <-rf.quitElection:
 			// DPrintf("%d quit TimeOutToElection", rf.me)
