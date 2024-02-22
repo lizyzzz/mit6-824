@@ -197,10 +197,11 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 		if opCtx.wrongLeader {
 			// 相同 index 的位置, term 发生改变, 说明当前 server 已经不是 leader
 			reply.Err = ErrWrongLeader
-		} else if opCtx.ignored {
-			// 说明 seqId 落后了, 请求被忽略, 直接回复 OK 即可
-			break
 		}
+		// else if opCtx.ignored {
+		// 	// 说明 seqId 落后了, 请求被忽略, 直接回复 OK 即可
+		// 	break
+		// }
 	case <-ticker.C:
 		// 超时让 client 重试
 		reply.Err = ErrWrongLeader
@@ -226,7 +227,7 @@ func (kv *KVServer) applyMsgLoop() {
 
 		if existOp {
 			// 存在在等待结果的 rpc, 判断状态是否与写入的时候一致
-			// 如果不一致, 说明leader 被更换了, 该 server 不再是 leader 了
+			// 如果不一致, 说明 leader 被更换了, 该 server 不再是 leader 了
 			if op.Term != opCtx.op.Term {
 				opCtx.wrongLeader = true
 			}
@@ -264,7 +265,10 @@ func (kv *KVServer) applyMsgLoop() {
 
 		// 唤醒阻塞的 rpc
 		if existOp {
-			opCtx.commitedChan <- 1
+			// 这里发送可能会没有线程接收(因为超时退出了)
+			// opCtx.commitedChan <- 1
+			// 使用 close
+			close(opCtx.commitedChan)
 		}
 
 		kv.mu.Unlock()

@@ -52,12 +52,11 @@ func (ck *Clerk) currentLeader() int {
 	return ck.leaderIndex
 }
 
-func (ck *Clerk) changeLeader() int {
+func (ck *Clerk) changeLeader() {
 	ck.mu.Lock()
 	defer ck.mu.Unlock()
 	ck.leaderIndex++
 	ck.leaderIndex = ck.leaderIndex % len(ck.servers)
-	return ck.leaderIndex
 }
 
 // fetch the current value for a key.
@@ -153,15 +152,15 @@ func (ck *Clerk) PutAppend(key string, value string, op string) {
 		SeqId:    atomic.AddInt64(&ck.seqId, 1), // 原子递增序列号
 	}
 
-	DPrintf("client[%d] start PutAppend key[%s]-value[%s], seq[%d]", ck.clientId, key, value, args.SeqId)
-
 	for {
 		reply := PutAppendReply{}
 		// 先尝试上一次的 leader
+		DPrintf("client[%d] start PutAppend key[%s]-value[%s] to server[%d], seq[%d]", ck.clientId, key, value, ck.currentLeader(), args.SeqId)
 		timeOut, ok := ck.sendPutAppendWithTimeOut(ck.currentLeader(), &args, &reply, 3000*time.Millisecond)
 
 		if timeOut {
 			// 超时
+			DPrintf("timeout")
 			continue
 		} else {
 			if ok {
@@ -173,9 +172,15 @@ func (ck *Clerk) PutAppend(key string, value string, op string) {
 					// 切换 leader
 					DPrintf("client[%d] PutAppend key err:%s", ck.clientId, reply.Err)
 					ck.changeLeader()
+				default:
+					DPrintf("unknow err")
 				}
+			} else {
+				// 切换 leader
+				ck.changeLeader()
 			}
 		}
+		time.Sleep(100 * time.Millisecond)
 	}
 
 }
