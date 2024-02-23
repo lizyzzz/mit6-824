@@ -41,9 +41,14 @@ import (
 // snapshots) on the applyCh; at that point you can add fields to
 // ApplyMsg, but set CommandValid to false for these other uses.
 type ApplyMsg struct {
-	CommandValid bool
+	CommandValid bool // True 表示是日志条目, False 表示是 日志快照
 	Command      interface{}
 	CommandIndex int
+
+	// 快照相关变量
+	Snapshot          []byte
+	LastIncludedIndex int
+	LastIncludedTerm  int
 }
 
 // 日志条目
@@ -252,47 +257,6 @@ func (rf *Raft) readPersist(data []byte) {
 	}
 }
 
-// 判断日志是否需要压缩
-func (rf *Raft) ExceedLogSize(logSize int) bool {
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
-
-	return rf.persister.RaftStateSize() >= logSize
-}
-
-// 执行快照由 kv 服务层调用, 删除掉被压缩的日志并保存快照
-func (rf *Raft) TakeSnapshot(snapshot []byte, lastIncludedIndex int) {
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
-
-	// 此快照比最近一次快照落后, 忽略这个快照
-	if lastIncludedIndex <= rf.lastIncludedIndex {
-		return
-	}
-
-	DPrintf("server[%d] TakeSnapshot begins, IsLeader[%v] snapshotLastIndex[%d] lastIncludedIndex[%d] lastIncludedTerm[%d]",
-		rf.me, rf.role == LEADER, lastIncludedIndex, rf.lastIncludedIndex, rf.lastIncludedTerm)
-
-	// 更新快照元信息
-	rf.lastIncludedIndex = lastIncludedIndex
-	rf.lastIncludedTerm = rf.logs[rf.logIndex2LogPos(lastIncludedIndex)].LogTerm
-
-	// 压缩日志
-	afterLog := make([]LogEntry, 0)
-	// 这里位置 0 保存了 lastEntry 作为哨兵节点
-	afterLog = append(afterLog, rf.logs[rf.logIndex2LogPos(lastIncludedIndex):]...)
-	// 位置 0 始终是哨兵节点(Command == nil)
-	afterLog[0].Command = nil
-
-	rf.logs = afterLog
-
-	// 持久化 snapshot 和 raft state
-	rf.persister.SaveStateAndSnapshot(rf.encodeRaftState(), snapshot)
-
-	DPrintf("server[%d] TakeSnapshot end, IsLeader[%v] snapshotLastIndex[%d] lastIncludedIndex[%d] lastIncludedTerm[%d]",
-		rf.me, rf.role == LEADER, lastIncludedIndex, rf.lastIncludedIndex, rf.lastIncludedTerm)
-}
-
 func (rf *Raft) logIndex2LogPos(logIndex int) int {
 	return logIndex - rf.lastIncludedIndex
 }
@@ -458,6 +422,7 @@ type AppendEntriesReply struct {
 }
 
 // 心跳, 日志复制
+// TODO: 更新 append 的逻辑?
 func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
 
 	rf.mu.Lock()
@@ -757,160 +722,212 @@ func (rf *Raft) TimeOutToElection() {
 
 // HeartBeatToServer 线程
 func (rf *Raft) HeartBeatToServer(peerIndex int) {
-	for {
-		if rf.killed() {
-			// DPrintf("%d heartbeat to %d quit because of killed", rf.me, peerIndex)
-			return
-		}
-
+	for !rf.killed() {
 		rf.mu.Lock()
-		role := rf.role
-		if role != LEADER {
+		if rf.role != LEADER {
 			// 收到了 term 更大的心跳或 requestVote, 已切换为follower
 			rf.mu.Unlock()
 			return
 		}
-		args := &AppendEntriesArgs{
-			LeaderTerm: rf.currentTerm,
-			LeaderId:   rf.me,
-			// 以下为 log entries 的参数
-			PrevLogIndex: -1,
-			PrevLogTerm:  -1,
-			Entries:      nil,
-			LeaderCommit: rf.commitIndex, // 如果是第一次 heartbeat, commitIndex == 0
-		}
-		if rf.getLastLog().LogIndex >= rf.leaderPtr.nextIndexs[peerIndex] {
-			// 有需要提交的日志
-			// DPrintf("peer:%d, len(logs):%d, index:%d", peerIndex, len(rf.logs), rf.leaderPtr.nextIndexs[peerIndex])
-			logPos := rf.logIndex2LogPos(rf.leaderPtr.nextIndexs[peerIndex])
-			args.PrevLogIndex = rf.logs[logPos-1].LogIndex
-			args.PrevLogTerm = rf.logs[logPos-1].LogTerm
-			args.Entries = rf.logs[logPos:] // 剩下的全部日志
-		}
+		flag := rf.leaderPtr.nextIndexs[peerIndex] <= rf.lastIncludedIndex
 		rf.mu.Unlock()
 
-		reply := &AppendEntriesReply{}
-		// 如果有需要复制的 log entry, 则以更短的时间间隔发送 appendentry
-
-		// DPrintf("leader %d send heartbeat to follower %d", rf.me, peerIndex)
-		// ok := rf.sendAppendEntries(peerIndex, args, reply)
-		timeOut, ok := rf.sendAppendEntriesWithTimeOut(peerIndex, args, reply, 50*time.Millisecond)
-		if timeOut {
-			// 任务超时
-			// DPrintf("leader %d send heartbeat to follower %d timeout", rf.me, peerIndex)
-			continue
+		if flag {
+			// 需要发送 InstallSnapshot
+			rf.doInstallSnapshotRPC(peerIndex)
 		} else {
-			// DPrintf("leader %d heartbeat recv ok from follower %d, ok: %v", rf.me, peerIndex, ok)
-			if ok {
-				if reply.Success {
-					if args.Entries != nil {
-						// follower 已复制了日志
-						// 更新 nextIndex 和 matIndex (只有在当前线程改变不需要持有锁)
-						rf.mu.Lock() // Lock() 防止 leaderptr 被置空
-						if rf.currentTerm != args.LeaderTerm {
-							rf.mu.Unlock()
-							return // leader 已被弃用
-						}
-						rf.leaderPtr.nextIndexs[peerIndex] = args.Entries[len(args.Entries)-1].LogIndex + 1
-						rf.leaderPtr.matchIndexs[peerIndex] = args.Entries[len(args.Entries)-1].LogIndex
-						// DPrintf("get success from %d, replication logIndex: %d, commitIndex: %d", peerIndex, args.Entries[len(args.Entries)-1].LogIndex, rf.commitIndex)
-						// 尝试更新 commitIndex, 并应用命令到状态机
-						if args.Entries[len(args.Entries)-1].LogIndex > rf.commitIndex {
-							// 注意只能提交本任期内的log
-							i := args.Entries[len(args.Entries)-1].LogIndex
-							iPos := rf.logIndex2LogPos(i)
-							for i > rf.commitIndex && rf.logs[iPos].LogTerm == rf.currentTerm {
-								cnt := 2 // leader + 当前回复的 follower
-								for j := 0; j < len(rf.peers); j++ {
-									if j == peerIndex || j == rf.me {
-										continue
-									}
-									if rf.leaderPtr.matchIndexs[j] >= i {
-										cnt++
-									}
+			// 需要发送 AppendEntries
+			rf.doAppendEntriesRPC(peerIndex)
+		}
+	}
+}
+
+// doAppendEntriesRPC 的逻辑
+// TODO: 思考返回的位置如果不在当前的 logs 内, 应该怎么处理
+func (rf *Raft) doAppendEntriesRPC(peerIndex int) {
+	rf.mu.Lock()
+	args := &AppendEntriesArgs{
+		LeaderTerm: rf.currentTerm,
+		LeaderId:   rf.me,
+		// 以下为 log entries 的参数
+		PrevLogIndex: -1,
+		PrevLogTerm:  -1,
+		Entries:      nil,
+		LeaderCommit: rf.commitIndex, // 如果是第一次 heartbeat, commitIndex == 0
+	}
+	if rf.getLastLog().LogIndex >= rf.leaderPtr.nextIndexs[peerIndex] {
+		// 有需要提交的日志
+		// DPrintf("peer:%d, len(logs):%d, index:%d", peerIndex, len(rf.logs), rf.leaderPtr.nextIndexs[peerIndex])
+		logPos := rf.logIndex2LogPos(rf.leaderPtr.nextIndexs[peerIndex])
+		args.PrevLogIndex = rf.logs[logPos-1].LogIndex
+		args.PrevLogTerm = rf.logs[logPos-1].LogTerm
+		args.Entries = rf.logs[logPos:] // 剩下的全部日志
+	}
+	rf.mu.Unlock()
+
+	reply := &AppendEntriesReply{}
+	// 如果有需要复制的 log entry, 则以更短的时间间隔发送 appendentry
+
+	// DPrintf("leader %d send heartbeat to follower %d", rf.me, peerIndex)
+	// ok := rf.sendAppendEntries(peerIndex, args, reply)
+	timeOut, ok := rf.sendAppendEntriesWithTimeOut(peerIndex, args, reply, 50*time.Millisecond)
+	if timeOut {
+		// 任务超时
+		// DPrintf("leader %d send heartbeat to follower %d timeout", rf.me, peerIndex)
+		time.Sleep(10 * time.Millisecond) // 10ms 后重发
+		return
+	} else {
+		// DPrintf("leader %d heartbeat recv ok from follower %d, ok: %v", rf.me, peerIndex, ok)
+		if ok {
+			if reply.Success {
+				if args.Entries != nil {
+					// follower 已复制了日志
+					// 更新 nextIndex 和 matIndex (只有在当前线程改变不需要持有锁)
+					rf.mu.Lock() // Lock() 防止 leaderptr 被置空
+					if rf.currentTerm != args.LeaderTerm {
+						rf.mu.Unlock()
+						return // leader 已被弃用
+					}
+					rf.leaderPtr.nextIndexs[peerIndex] = args.Entries[len(args.Entries)-1].LogIndex + 1
+					rf.leaderPtr.matchIndexs[peerIndex] = args.Entries[len(args.Entries)-1].LogIndex
+					// DPrintf("get success from %d, replication logIndex: %d, commitIndex: %d", peerIndex, args.Entries[len(args.Entries)-1].LogIndex, rf.commitIndex)
+					// 尝试更新 commitIndex, 并应用命令到状态机
+					if args.Entries[len(args.Entries)-1].LogIndex > rf.commitIndex {
+						// 注意只能提交本任期内的log
+						i := args.Entries[len(args.Entries)-1].LogIndex
+						iPos := rf.logIndex2LogPos(i)
+						for i > rf.commitIndex && rf.logs[iPos].LogTerm == rf.currentTerm {
+							cnt := 2 // leader + 当前回复的 follower
+							for j := 0; j < len(rf.peers); j++ {
+								if j == peerIndex || j == rf.me {
+									continue
 								}
-								if cnt >= (len(rf.peers)+1)/2 {
-									// 大多数都已复制了这个 log, 更新 commitIndex
-									// 往 applyCh 发送,更新 lastApplied
-									for k := rf.commitIndex + 1; k <= i; k++ {
-										if !rf.logs[rf.logIndex2LogPos(k)].IsInternalLog {
-											// 非内部log需要应用到状态机
-											applyMsg := ApplyMsg{
-												CommandValid: true,
-												Command:      rf.logs[rf.logIndex2LogPos(k)].Command,
-												CommandIndex: rf.logs[rf.logIndex2LogPos(k)].CommandIndex,
-											}
-											rf.applyChan <- applyMsg
-											DPrintf("server %d apply command: %v, commandIndex: %d, logIndex: %d, term: %d,",
-												rf.me, applyMsg.Command, applyMsg.CommandIndex, rf.logs[rf.logIndex2LogPos(k)].LogIndex, rf.logs[rf.logIndex2LogPos(k)].LogTerm)
+								if rf.leaderPtr.matchIndexs[j] >= i {
+									cnt++
+								}
+							}
+							if cnt >= (len(rf.peers)+1)/2 {
+								// 大多数都已复制了这个 log, 更新 commitIndex
+								// 往 applyCh 发送,更新 lastApplied
+								for k := rf.commitIndex + 1; k <= i; k++ {
+									if !rf.logs[rf.logIndex2LogPos(k)].IsInternalLog {
+										// 非内部log需要应用到状态机
+										applyMsg := ApplyMsg{
+											CommandValid: true,
+											Command:      rf.logs[rf.logIndex2LogPos(k)].Command,
+											CommandIndex: rf.logs[rf.logIndex2LogPos(k)].CommandIndex,
 										}
+										rf.applyChan <- applyMsg
+										DPrintf("server %d apply command: %v, commandIndex: %d, logIndex: %d, term: %d,",
+											rf.me, applyMsg.Command, applyMsg.CommandIndex, rf.logs[rf.logIndex2LogPos(k)].LogIndex, rf.logs[rf.logIndex2LogPos(k)].LogTerm)
 									}
-									rf.commitIndex = i
-									rf.lastApplied = i
-									break
 								}
-								// 注意循环条件变化
-								i--
-								iPos = rf.logIndex2LogPos(i)
+								rf.commitIndex = i
+								rf.lastApplied = i
+								break
 							}
+							// 注意循环条件变化
+							i--
+							iPos = rf.logIndex2LogPos(i)
 						}
-						rf.mu.Unlock()
 					}
+					rf.mu.Unlock()
+				}
+			} else {
+				if args.LeaderTerm < reply.FollowerTerm {
+					// leaderTerm < replyterm
+					// 转换为 follower
+					rf.mu.Lock()
+					rf.becomeFollower(reply.FollowerTerm)
+					rf.mu.Unlock()
+					// DPrintf("leader %d find high term, become follower", rf.me)
+					return // 直接退出不再发送 heartbeat
 				} else {
-					if args.LeaderTerm < reply.FollowerTerm {
-						// leaderTerm < replyterm
-						// 转换为 follower
-						rf.mu.Lock()
-						rf.becomeFollower(reply.FollowerTerm)
+					// 日志冲突导致的失败, 快速定位冲突日志
+					rf.mu.Lock()
+					if rf.currentTerm != args.LeaderTerm {
 						rf.mu.Unlock()
-						// DPrintf("leader %d find high term, become follower", rf.me)
-						break // 跳出循环不再发送 heartbeat
-					} else {
-						// 日志冲突导致的失败, 递减 nextIndex 后重试
-						// rf.mu.Lock()
-						// if rf.role != LEADER {
-						// 	rf.mu.Unlock()
-						// 	return // leader 已被弃用
-						// }
-						// rf.leaderPtr.nextIndexs[peerIndex]--
-						// rf.mu.Unlock()
-
-						// 日志冲突导致的失败, 快速定位冲突日志
-						rf.mu.Lock()
-						if rf.currentTerm != args.LeaderTerm {
-							rf.mu.Unlock()
-							return // leader 已被弃用
-						}
-						if reply.Xterm != -1 {
-							// 查找是否有 Xterm
-							for i := rf.getLastLog().LogIndex; i >= rf.logs[0].LogIndex; i-- {
-								iPos := rf.logIndex2LogPos(i)
-								if rf.logs[iPos].LogTerm == reply.Xterm {
-									// 存在冲突 Xterm, 直接在 冲突term开始的位置 备份
-									rf.leaderPtr.nextIndexs[peerIndex] = i + 1
-									break
-								} else if rf.logs[iPos].LogTerm < reply.Xterm {
-									// 不存在冲突 Xterm, 直接从 Xindex 备份
-									rf.leaderPtr.nextIndexs[peerIndex] = reply.Xindex
-									break
-								}
-							}
-						} else {
-							// prevLogIndex 不存在, 直接从日志最后一个开始备份
-							rf.leaderPtr.nextIndexs[peerIndex] = reply.Xlen + 1
-						}
-						DPrintf("server %d (leader: %d) nextIndex: %d", peerIndex, rf.me, rf.leaderPtr.nextIndexs[peerIndex])
-						rf.mu.Unlock()
-
-						time.Sleep(10 * time.Millisecond) // 10ms 后重试
-						continue
+						return // leader 已被弃用
 					}
+					if reply.Xterm != -1 {
+						// 查找是否有 Xterm
+						for i := rf.getLastLog().LogIndex; i >= rf.logs[0].LogIndex; i-- {
+							iPos := rf.logIndex2LogPos(i)
+							if rf.logs[iPos].LogTerm == reply.Xterm {
+								// 存在冲突 Xterm, 直接在 冲突term开始的位置 备份
+								rf.leaderPtr.nextIndexs[peerIndex] = i + 1
+								break
+							} else if rf.logs[iPos].LogTerm < reply.Xterm {
+								// 不存在冲突 Xterm, 直接从 Xindex 备份
+								rf.leaderPtr.nextIndexs[peerIndex] = reply.Xindex
+								break
+							}
+						}
+					} else {
+						// prevLogIndex 不存在, 直接从日志最后一个开始备份
+						rf.leaderPtr.nextIndexs[peerIndex] = reply.Xlen + 1
+					}
+					DPrintf("server %d (leader: %d) nextIndex: %d", peerIndex, rf.me, rf.leaderPtr.nextIndexs[peerIndex])
+					rf.mu.Unlock()
+
+					time.Sleep(10 * time.Millisecond) // 10ms 后重试
+					return
 				}
 			}
-			// 100 ms 发送一次
-			time.Sleep(100 * time.Millisecond)
+		}
+		// 100 ms 发送一次
+		time.Sleep(100 * time.Millisecond)
+	}
+}
+
+// doInstallSnapshotRPC 的逻辑
+func (rf *Raft) doInstallSnapshotRPC(peerIndex int) {
+	rf.mu.Lock()
+	DPrintf("server %d doInstallSnapshotRPC starts, to peerId[%d]", rf.me, peerIndex)
+
+	args := &InstallSnapshotArgs{
+		Term:              rf.currentTerm,
+		LeaderId:          rf.me,
+		LastIncludedIndex: rf.lastIncludedIndex,
+		LastIncludedTerm:  rf.lastIncludedTerm,
+		Offset:            0,
+		Data:              rf.persister.ReadSnapshot(),
+		Done:              true,
+	}
+	rf.mu.Unlock()
+	reply := &InstallSnapshotReply{}
+
+	// 请求时不要持有锁
+	timeOut, ok := rf.sendInstallSnapshotWithTimeOut(peerIndex, args, reply, 50*time.Millisecond)
+
+	if timeOut {
+		// 任务超时
+		time.Sleep(10 * time.Millisecond)
+		return // 10ms 后重试
+	} else if ok {
+		// 收到响应
+		rf.mu.Lock()
+		if rf.currentTerm != args.Term {
+			rf.mu.Unlock()
+			return // leader 被弃用
 		}
 
+		if reply.Term > rf.currentTerm {
+			// 发现更高的 term, 成为 follower
+			rf.becomeFollower(reply.Term)
+			rf.mu.Unlock()
+			return
+		} else {
+			// 成功接收
+			rf.leaderPtr.nextIndexs[peerIndex] = args.LastIncludedIndex + 1 // 定位到已应用的下一个 index
+			rf.leaderPtr.matchIndexs[peerIndex] = args.LastIncludedIndex
+			// 不用尝试更新 commitIndex, 因为只有已经应用到 kv 服务层的日志才会被压缩, 这些日志都是已经被提交了的
+			rf.mu.Unlock()
+			time.Sleep(100 * time.Millisecond)
+		}
+	} else {
+		// 没有收到响应, 10ms 后重试
+		time.Sleep(10 * time.Millisecond)
 	}
 }
 
@@ -990,6 +1007,114 @@ func (rf *Raft) killed() bool {
 	return z == 1
 }
 
+// ------- 日志压缩相关函数 -----------------------
+
+// InstallSnapshot 请求参数
+type InstallSnapshotArgs struct {
+	Term              int    // leader 的任期
+	LeaderId          int    // leader id
+	LastIncludedIndex int    // 快照的最后一个日志索引
+	LastIncludedTerm  int    // 快照的最后一个日志任期
+	Offset            int    // 数据块偏移量
+	Data              []byte // 快照数据块
+	Done              bool   // 是否是最后一个块
+}
+
+type InstallSnapshotReply struct {
+	Term int // follower 当前的任期, 供 leader 更新
+}
+
+// InstallSnapshot rpc handler
+// TODO: 完成 InstallSnapshot 的逻辑
+func (rf *Raft) InstallSnapshot(args *InstallSnapshotArgs, reply *InstallSnapshotReply) {
+
+}
+
+func (rf *Raft) sendInstallSnapshot(server int, args *InstallSnapshotArgs, reply *InstallSnapshotReply) bool {
+	ok := rf.peers[server].Call("Raft.InstallSnapshot", args, reply)
+	return ok
+}
+
+// 在指定时间内执行, 超时则返回 false, 第一个参数表示是否超时, 第二个参数表示是否收到响应
+func (rf *Raft) sendInstallSnapshotWithTimeOut(server int, args *InstallSnapshotArgs, reply *InstallSnapshotReply, ms time.Duration) (bool, bool) {
+	ctx, cancel := context.WithTimeout(context.Background(), ms)
+	defer cancel()
+
+	taskDone := make(chan bool, 1)
+	go func() {
+		ok := rf.sendInstallSnapshot(server, args, reply)
+		taskDone <- ok
+	}()
+
+	select {
+	case ok := <-taskDone:
+		// 任务完成
+		return false, ok
+	case <-ctx.Done():
+		// 任务超时
+		return true, false
+	}
+}
+
+// 判断日志是否需要压缩
+func (rf *Raft) ExceedLogSize(logSize int) bool {
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+
+	return rf.persister.RaftStateSize() >= logSize
+}
+
+// 执行快照由 kv 服务层调用, 删除掉被压缩的日志并保存快照
+func (rf *Raft) TakeSnapshot(snapshot []byte, lastIncludedIndex int) {
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+
+	// 此快照比最近一次快照落后, 忽略这个快照
+	if lastIncludedIndex <= rf.lastIncludedIndex {
+		return
+	}
+
+	DPrintf("server[%d] TakeSnapshot begins, IsLeader[%v] snapshotLastIndex[%d] lastIncludedIndex[%d] lastIncludedTerm[%d]",
+		rf.me, rf.role == LEADER, lastIncludedIndex, rf.lastIncludedIndex, rf.lastIncludedTerm)
+
+	// 更新快照元信息
+	rf.lastIncludedIndex = lastIncludedIndex
+	rf.lastIncludedTerm = rf.logs[rf.logIndex2LogPos(lastIncludedIndex)].LogTerm
+
+	// 压缩日志
+	afterLog := make([]LogEntry, 0)
+	// 这里位置 0 保存了 lastEntry 作为哨兵节点
+	afterLog = append(afterLog, rf.logs[rf.logIndex2LogPos(lastIncludedIndex):]...)
+	// 位置 0 始终是哨兵节点(Command == nil)
+	afterLog[0].Command = nil
+
+	rf.logs = afterLog
+
+	// 持久化 snapshot 和 raft state
+	rf.persister.SaveStateAndSnapshot(rf.encodeRaftState(), snapshot)
+
+	DPrintf("server[%d] TakeSnapshot end, IsLeader[%v] snapshotLastIndex[%d] lastIncludedIndex[%d] lastIncludedTerm[%d]",
+		rf.me, rf.role == LEADER, lastIncludedIndex, rf.lastIncludedIndex, rf.lastIncludedTerm)
+}
+
+// 首次启动需要恢复 snapshot
+func (rf *Raft) installSnapshotToApplication() {
+	applyMsg := ApplyMsg{
+		CommandValid:      false,
+		Snapshot:          rf.persister.ReadSnapshot(),
+		LastIncludedIndex: rf.lastIncludedIndex, // 首次是 0
+		LastIncludedTerm:  rf.lastIncludedTerm,  // 首次是 0
+	}
+
+	rf.lastApplied = rf.lastIncludedIndex
+	rf.commitIndex = rf.lastIncludedIndex
+
+	DPrintf("server %d installSnapshotToApplication, SnapshotSize[%d], lastIncludedIndex[%d], lastIncludedTerm[%d]",
+		rf.me, len(applyMsg.Snapshot), applyMsg.LastIncludedIndex, applyMsg.LastIncludedTerm)
+
+	rf.applyChan <- applyMsg
+}
+
 // the service or tester wants to create a Raft server. the ports
 // of all the Raft servers (including this one) are in peers[]. this
 // server's port is peers[me]. all the servers' peers[] arrays
@@ -1035,12 +1160,14 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.timeOutMS = int32(200 + rf.me*50)
 	atomic.StoreInt32(&rf.heartBeatCnt, 0)
 
-	// 启动超时选举的协程
-	go rf.TimeOutToElection()
-
 	// initialize from state persisted before a crash
 	DPrintf("%d initialize", rf.me)
 	rf.readPersist(persister.ReadRaftState())
+
+	rf.installSnapshotToApplication()
+
+	// 启动超时选举的协程
+	go rf.TimeOutToElection()
 
 	return rf
 }
