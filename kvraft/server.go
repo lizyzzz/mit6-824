@@ -1,6 +1,7 @@
 package kvraft
 
 import (
+	"bytes"
 	"labgob"
 	"log"
 	"sync"
@@ -70,6 +71,8 @@ type KVServer struct {
 	kvStore map[string]string  // 状态存储
 	cmdMap  map[int]*OpContext // commandIndex -> 请求上下文
 	seqMap  map[int64]int64    // clientId -> clientSeq(记录上次执行的操作序号, 保证幂等)
+
+	lastAppliedIndex int // 最后一个应用到状态机的 index
 }
 
 // Get rpc handler
@@ -209,7 +212,7 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 
 }
 
-// 循环接收 applyCh 的消息
+// 循环接收 applyCh 的消息 goroutine
 func (kv *KVServer) applyMsgLoop() {
 	for !kv.killed() {
 		msg := <-kv.applyCh
@@ -275,6 +278,35 @@ func (kv *KVServer) applyMsgLoop() {
 	}
 }
 
+// 循环检查是否需要 snapshot 的 goroutine
+func (kv *KVServer) snapshotLoop() {
+	for !kv.killed() {
+		var snapshot []byte
+		var lastIncludedIndex int
+
+		// 如果日志长度超过了 maxraftstate, 则进行快照
+		if kv.maxraftstate != -1 && kv.rf.ExceedLogSize(kv.maxraftstate) {
+			// 进行快照时需要上锁
+			kv.mu.Lock()
+			w := new(bytes.Buffer)
+			e := labgob.NewEncoder(w)
+			e.Encode(kv.kvStore)
+			e.Encode(kv.seqMap) // 当前各客户端最大请求序号, 也要进行快照, 防止 leader 宕机后马上重启安装快照丢失了各客户端的请求序号(保证幂等性)
+			snapshot = w.Bytes()
+			lastIncludedIndex = kv.lastAppliedIndex
+			DPrintf("kvserver[%d] dump snapshot, snapshotSize[%d] lastAppliedIndex[%d]", kv.me, len(snapshot), kv.lastAppliedIndex)
+			kv.mu.Unlock()
+		}
+
+		// 在释放锁后通知 raft 层截断, 否则有死锁
+		if snapshot != nil {
+			// 通知 raft 截断已经应用到状态机的日志(这些日志都已经提交, 可以放心操作)
+			kv.rf.TakeSnapshot(snapshot, lastIncludedIndex)
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+}
+
 // the tester calls Kill() when a KVServer instance won't
 // be needed again. for your convenience, we supply
 // code to set rf.dead (without needing a lock),
@@ -312,21 +344,21 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	labgob.Register(&Op{})
 
 	kv := &KVServer{
-		me:           me,
-		applyCh:      make(chan raft.ApplyMsg),
-		maxraftstate: maxraftstate,
-		kvStore:      make(map[string]string),
-		cmdMap:       make(map[int]*OpContext),
-		seqMap:       make(map[int64]int64),
+		me:               me,
+		applyCh:          make(chan raft.ApplyMsg),
+		maxraftstate:     maxraftstate,
+		kvStore:          make(map[string]string),
+		cmdMap:           make(map[int]*OpContext),
+		seqMap:           make(map[int64]int64),
+		lastAppliedIndex: 0,
 	}
 
 	// You may need initialization code here.
 
 	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
 
-	// You may need initialization code here.
-
 	go kv.applyMsgLoop()
+	go kv.snapshotLoop()
 
 	return kv
 }
