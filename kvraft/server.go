@@ -213,7 +213,6 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 }
 
 // 循环接收 applyCh 的消息 goroutine
-// TODO: 接收快照的逻辑
 func (kv *KVServer) applyMsgLoop() {
 	for !kv.killed() {
 		msg := <-kv.applyCh
