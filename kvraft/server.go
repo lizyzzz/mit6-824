@@ -213,68 +213,106 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 }
 
 // 循环接收 applyCh 的消息 goroutine
+// TODO: 接收快照的逻辑
 func (kv *KVServer) applyMsgLoop() {
 	for !kv.killed() {
 		msg := <-kv.applyCh
-		cmd := msg.Command
-		cmdIndex := msg.CommandIndex
+		if msg.CommandValid {
+			// 普通日志 log
+			cmd := msg.Command
+			cmdIndex := msg.CommandIndex
 
-		kv.mu.Lock()
+			kv.mu.Lock()
 
-		// 类型转换为操作日志
-		op := cmd.(*Op)
-
-		opCtx, existOp := kv.cmdMap[cmdIndex]
-		prevSeq, existSeq := kv.seqMap[op.ClientId]
-		kv.seqMap[op.ClientId] = op.SeqId // 接收到 msg, 说明已被提交, 更新 client 最新被提交的操作
-
-		if existOp {
-			// 存在在等待结果的 rpc, 判断状态是否与写入的时候一致
-			// 如果不一致, 说明 leader 被更换了, 该 server 不再是 leader 了
-			if op.Term != opCtx.op.Term {
-				opCtx.wrongLeader = true
+			if msg.LogIndex <= kv.lastAppliedIndex {
+				// 落后的 applymsg
+				kv.mu.Unlock()
+				continue
 			}
-		}
 
-		// 如果是写请求, 应用状态机
-		if op.Type == OP_TYPE_PUT || op.Type == OP_TYPE_APPEND {
-			if !existSeq || op.SeqId > prevSeq {
-				// 序列号比之前的更新, 接收这个变更
-				if op.Type == OP_TYPE_PUT {
-					kv.kvStore[op.Key] = op.Value
-				} else if op.Type == OP_TYPE_APPEND {
-					if val, ok := kv.kvStore[op.Key]; ok {
-						// 已存在的 append
-						kv.kvStore[op.Key] = val + op.Value
-					} else {
-						// 不存在的 put
-						kv.kvStore[op.Key] = op.Value
-					}
-				}
-			} else if existOp {
-				// op.SeqId < prevSeq
-				// 序列号落后, 该操作被忽略
-				opCtx.ignored = true
-			}
-		} else {
-			// 读请求
+			// 更新已经应用到的 logIndex
+			kv.lastAppliedIndex = msg.LogIndex
+			// 类型转换为操作日志
+			op := cmd.(*Op)
+
+			opCtx, existOp := kv.cmdMap[cmdIndex]
+			prevSeq, existSeq := kv.seqMap[op.ClientId]
+			kv.seqMap[op.ClientId] = op.SeqId // 接收到 msg, 说明已被提交, 更新 client 最新被提交的操作
+
 			if existOp {
-				// 如果是 wrong
-				opCtx.value, opCtx.keyExist = kv.kvStore[op.Key]
+				// 存在在等待结果的 rpc, 判断状态是否与写入的时候一致
+				// 如果不一致, 说明 leader 被更换了, 该 server 不再是 leader 了
+				if op.Term != opCtx.op.Term {
+					opCtx.wrongLeader = true
+				}
 			}
+
+			// 如果是写请求, 应用状态机
+			if op.Type == OP_TYPE_PUT || op.Type == OP_TYPE_APPEND {
+				if !existSeq || op.SeqId > prevSeq {
+					// 序列号比之前的更新, 接收这个变更
+					if op.Type == OP_TYPE_PUT {
+						kv.kvStore[op.Key] = op.Value
+					} else if op.Type == OP_TYPE_APPEND {
+						if val, ok := kv.kvStore[op.Key]; ok {
+							// 已存在的 append
+							kv.kvStore[op.Key] = val + op.Value
+						} else {
+							// 不存在的 put
+							kv.kvStore[op.Key] = op.Value
+						}
+					}
+				} else if existOp {
+					// op.SeqId < prevSeq
+					// 序列号落后, 该操作被忽略
+					opCtx.ignored = true
+				}
+			} else {
+				// 读请求
+				if existOp {
+					// 如果是 wrongleader, 这个结果也不会被读到
+					opCtx.value, opCtx.keyExist = kv.kvStore[op.Key]
+				}
+			}
+
+			DPrintf("raft node[%d] applyMsgLoop kvStore[%v]", kv.me, kv.kvStore)
+
+			// 唤醒阻塞的 rpc
+			if existOp {
+				// 这里发送可能会没有线程接收(因为超时退出了)
+				// opCtx.commitedChan <- 1
+				// 使用 close
+				close(opCtx.commitedChan)
+			}
+
+			kv.mu.Unlock()
+		} else {
+			// 安装快照
+			kv.mu.Lock()
+			if msg.LastIncludedIndex <= kv.lastAppliedIndex {
+				// 落后的 applymsg
+				kv.mu.Unlock()
+				continue
+			}
+
+			// 更新已经应用到的 logIndex
+			kv.lastAppliedIndex = msg.LastIncludedIndex
+
+			if len(msg.Snapshot) == 0 {
+				// 空快照, 清空数据
+				kv.kvStore = make(map[string]string)
+				kv.seqMap = make(map[int64]int64)
+			} else {
+				// 把快照反序列化, 安装到内存
+				r := bytes.NewBuffer(msg.Snapshot)
+				d := labgob.NewDecoder(r)
+				d.Decode(&kv.kvStore)
+				d.Decode(&kv.seqMap)
+				// 这里不用担心 seqMap 的 client.seq 不够新, 后续随着 log 条目的更新, 会更新 client.seq
+				// 之所以快照要压缩 kv.seqMap, 是防止有些 client.seq 在后续的 log 条目上没有更新.
+			}
+			kv.mu.Unlock()
 		}
-
-		DPrintf("raft node[%d] applyMsgLoop kvStore[%v]", kv.me, kv.kvStore)
-
-		// 唤醒阻塞的 rpc
-		if existOp {
-			// 这里发送可能会没有线程接收(因为超时退出了)
-			// opCtx.commitedChan <- 1
-			// 使用 close
-			close(opCtx.commitedChan)
-		}
-
-		kv.mu.Unlock()
 	}
 }
 
@@ -355,9 +393,10 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 
 	// You may need initialization code here.
 
+	go kv.applyMsgLoop() // applyMsgLoop 比 (raft 初始化) 先启动, 因为 raft 初始化会往 applyCh 发送快照
+
 	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
 
-	go kv.applyMsgLoop()
 	go kv.snapshotLoop()
 
 	return kv
